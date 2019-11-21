@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="../css/login/login.css" />
+    <title>登录</title>
+
+</head>
+<body>
+<div class="dowebok">
+    <div class="logo"></div>
+    <form id="loginInfo" action="../login" method="post">
+        <div class="form-item">
+            <div class="user icon-position"></div>
+            <input type="text" class="input-position input-style" name="username" id="username" placeholder="登录账号">
+            <p class="tip">请输入正确的用户名</p>
+        </div>
+        <div class="form-item">
+            <div class="password icon-position"></div>
+            <input  type="password"  class="input-position input-style" autocomplete="off" name="password" id="password" placeholder="登录账号">
+            <p class="tip">用户名或密码不正确</p>
+        </div>
+        <div class="form-item"><button id="submit">登 录</button></div>
+        <div class="reg-bar">
+            <a class="reg" href="javascript:">立即注册</a>
+            <a class="forget" href="javascript:">忘记密码</a>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#submit').on('click', function () {
+            $('#loginInfo').submit();
+        })
+    })
+</script>
+
+</body>
+</html>
