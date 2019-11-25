@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.services.dpidcalarm.datainfo.dao.DataInfoDao">
+    
+    <resultMap id="dataInfoMap" type="DataInfo">
+        <id property="id" column="id"></id>
+        <result property="aValue" column="a_value"/>
+        <result property="isSatisfactory" column="is_satisfactory"/>
+        <result property="errorCount" column="cou"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+    <select id="findUnQualified" resultMap="dataInfoMap">
+        select
+        a.id id,
+        a.a_value a_value,
+        a.is_satisfactory is_satisfactory,
+        a.create_time create_time,
+        count(b.data_id) cou
+        from data_info a,data_info_error b
+        where a.id = b.data_id
+        <if test="entity.startTimeStr != null and entity.startTimeStr != ''">
+            and a.create_time >= #{entity.startTimeStr}
+        </if>
+        <if test="entity.endTimeStr != null and entity.endTimeStr != ''">
+            and a.create_time &lt;= #{entity.endTimeStr}
+        </if>
+        group by b.data_id
+        order by a.create_time desc
+    </select>
+
+    <select id="monthAvgInfo" resultType="java.util.Map">
+        SELECT a.id,a.x X,IF(b.y IS NULL,0,FORMAT(b.y,2)) Y
+        FROM data_temp_month a
+        LEFT JOIN
+        (SELECT '1' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 1 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '2' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 2 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '3' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 3 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '4' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 4 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '5' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 5 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '6' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 6 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '7' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 7 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '8' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 8 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '9' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 9 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '10' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 10 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '11' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 11 GROUP BY MONTH(create_time)
+        UNION ALL
+        SELECT '12' X,AVG(a_value) Y FROM data_info WHERE YEAR(create_time) = #{0} AND MONTH(create_time) = 12 GROUP BY MONTH(create_time)) b
+        ON(a.x = b.x) order by a.id
+    </select>
+    <select id="dayAvgInfo" resultType="java.util.Map">
+        call month_data_info(#{year},#{month})
+    </select>
+    <select id="minuteInfo" resultType="java.util.Map">
+        SELECT a.id,a.x X,IF(b.y IS NULL,0.0,FORMAT(b.y,2)) Y
+        FROM data_temp_minutes a LEFT JOIN (
+        SELECT CONCAT(HOUR(create_time),':',MINUTE(m.create_time)) X,m.a_value Y
+        FROM data_info m
+        WHERE YEAR(create_time) = #{year}
+        AND MONTH(create_time) = #{month}
+        AND DAY(create_time) = #{day}) b
+        ON(a.x = b.x) ORDER BY a.id
+    </select>
+    <select id="last3DataInfo" resultMap="dataInfoMap">
+        select *
+        from data_info
+        where is_satisfactory = 1
+        order by create_time DESC
+        limit 3
+    </select>
+    <select id="dataInfoErrorSum" resultType="java.util.Map">
+        select e.device_name device_name,count(e.device_name) c
+        from data_info d,data_info_error e
+        where d.id=e.data_id
+        <if test="startTimeStr != null and startTimeStr != ''">
+            and d.create_time >= #{startTimeStr}
+        </if>
+        <if test="endTimeStr != null and endTimeStr != ''">
+            and d.create_time &lt;= #{endTimeStr}
+        </if>
+        group by e.device_name
+        order by c desc
+    </select>
+
+
+</mapper>

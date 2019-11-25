@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="callSettersOnNulls" value="true"/>
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+    </settings>
+    <typeAliases>
+
+        <!--<typeAlias type="com.services.dpidcalarm.user.entity.User" alias="User"></typeAlias>-->
+        <typeAlias type="com.services.dpidcalarm.sconf.bean.PropertiesConfiguration" alias="PropertiesConfiguration"></typeAlias>
+        <typeAlias type="com.services.dpidcalarm.smslog.bean.SmSendLog" alias="SmSendLog"></typeAlias>
+        <typeAlias type="com.services.dpidcalarm.datainfo.bean.DataInfo" alias="DataInfo"></typeAlias>
+        <typeAlias type="com.services.dpidcalarm.datainfo.bean.DataInfoError" alias="DataInfoError"></typeAlias>
+
+    </typeAliases>
+    <mappers>
+
+       <mapper resource="mapping/UserMapper.xml"/>
+        <mapper resource="mapping/PropertiesConfigurationDao.xml"/>
+        <mapper resource="mapping/SmSendLogDao.xml"/>
+        <mapper resource="mapping/DataInfoDao.xml"/>
+        <mapper resource="mapping/DataInfoErrorDao.xml"/>
+
+    </mappers>
+</configuration>

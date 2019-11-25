@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.services.dpidcalarm.datainfo.dao.DataInfoErrorDao">
+    
+    <resultMap id="errorMap" type="DataInfoError">
+        <id property="id" column="id"></id>
+        <result property="deviceName" column="device_name"></result>
+        <result property="testValue" column="test_value"></result>
+        <result property="estimateValue" column="estimate_value"></result>
+        <result property="dataId" column="data_id"></result>
+        <result property="deviceType" column="device_type"></result>
+        <result property="deviceType" column="device_type"></result>
+        <result property="createTime" column="create_time"></result>
+    </resultMap>
+
+    <select id="findByDataId" resultMap="errorMap">
+        select * from data_info_error where data_id = #{0}
+    </select>
+
+
+</mapper>

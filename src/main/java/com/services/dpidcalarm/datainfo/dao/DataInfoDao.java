@@ -2,6 +2,7 @@ package com.services.dpidcalarm.datainfo.dao;
 
 import com.services.dpidcalarm.base.bean.MyMapper;
 import com.services.dpidcalarm.datainfo.bean.DataInfo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
+@Mapper
 public abstract interface DataInfoDao extends MyMapper<DataInfo>
 {
   public abstract List<DataInfo> findUnQualified(@Param("entity") DataInfo paramDataInfo);

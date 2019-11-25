@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.services.dpidcalarm.sconf.dao.PropertiesConfigurationDao">
+    
+    <resultMap id="pcMap" type="PropertiesConfiguration">
+        <id property="id" column="id"></id>
+        <result property="condition" column="c_condition"></result>
+        <result property="value" column="c_value"></result>
+        <result property="invalidTime" column="invalid_time"></result>
+        <result property="workTimeStart" column="work_time_start"></result>
+        <result property="workTimeEnd" column="work_time_end"></result>
+        <result property="cycle" column="cycle"></result>
+        <result property="isWeekend" column="is_weekend"></result>
+        <result property="shortMsgModel" column="short_msg_model"></result>
+        <result property="indicatorId" column="indicator_id"></result>
+    </resultMap>
+    <select id="findConfig" resultMap="pcMap">
+        select *
+        from properties_configuration
+        where indicator_id = #{indicatorId}
+        and is_weekend = #{isWeekend}
+    </select>
+
+</mapper>
