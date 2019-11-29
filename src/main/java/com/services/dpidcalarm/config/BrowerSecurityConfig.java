@@ -42,7 +42,7 @@ public class BrowerSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 自定义的登录接口
                 .loginProcessingUrl("/login")
                 // 设置登陆成功页
-                .defaultSuccessUrl("/html/index.html",true).permitAll()
+                .defaultSuccessUrl("/html/main.html",true).permitAll()
                 .and()
                 .authorizeRequests()    // 定义哪些URL需要被保护、哪些不需要被保护
                 // 设置所有人都可以访问登录页面

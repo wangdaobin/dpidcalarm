@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>已发送短信查询</title>
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element-ext.css">
+    <link rel="stylesheet" type="text/css" href="../css/send_message.css">
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="condition-container">
+            <label>起始时间:&nbsp;</label>
+            <el-date-picker
+                    v-model="date1"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="选择日期">
+            </el-date-picker>
+            <label style="margin-left:15px ">结束时间:&nbsp;</label>
+            <el-date-picker
+                    v-model="date2"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="选择日期">
+            </el-date-picker>
+            <label style="margin-left:15px">对象:</label>
+            <el-select v-model="typeValue" placeholder="请选择">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <label style="margin-left:15px">内容:</label>
+            <el-input style="width: 220px"
+                    placeholder="请输入内容"
+                    v-model="content"
+                    clearable>
+            </el-input>
+
+            <el-button type="primary" style="margin-left: 30px" icon="el-icon-search" >查询</el-button>
+        </div>
+        <div class="table-container">
+            <template>
+                <el-table
+                        :data="tableData"
+                        height="100%"
+                        stripe border
+                        style="width: 100%">
+                    <el-table-column
+                            prop="facName"
+                            label="发送方"
+                            width="120px"
+                            align="center">
+                    </el-table-column>
+                    <el-table-column
+                            prop="idcName"
+                            label="接收方"
+                            width="180px"
+                            align="center">
+                    </el-table-column>
+                    <el-table-column
+                            prop="collectTime"
+                            label="姓名"
+                            width="180px"
+                            align="center">
+                    </el-table-column>
+                    <el-table-column
+                            prop="errorNum"
+                            label="发送时间"
+                            width="240px"
+                            align="center">
+                    </el-table-column>
+                    <el-table-column
+                            prop="errorNum"
+                            label="短信内容"
+                            align="center">
+                    </el-table-column>
+                </el-table>
+            </template>
+        </div>
+        <div class="page-container">
+            <el-pagination
+                    background
+                    layout="prev, pager, next"
+                    :total="1000">
+            </el-pagination>
+        </div>
+    </div>
+    <script type="text/javascript" src="../plugins/vue/vue.js"></script>
+    <script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+    <script type="text/javascript" src="../js/send_message.js"></script>
+</body>
+</html>

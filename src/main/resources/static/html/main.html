@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+</head>
+<body>
+<div id="viewport" class="viewport">
+    <div class="header">
+        <div class="title">主站系统数据智能管理平台</div>
+        <div class="head-v3" id="index" v-cloak>
+            <div class="navigation-up">
+                <div class="navigation-inner">
+                    <div class="navigation-v3">
+                        <ul>
+                            <ul>
+                                <!-- 默认被选中项 -->
+                                <li :class="i.nav == selectedNav ? 'nav-up-selected-inpage' : ''" v-for="i in nevigatelist" :_t_nav="i.nav">
+                                    <h2>
+                                        <a href="javascript:void(0)">{{i.label}}</a>
+                                    </h2>
+                                </li>
+                            </ul>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="navigation-down">
+                <div v-for="i in navdetails" :name="i.p_name" :id="i.id" :class="i.id == 'product' ? ['nav-down-menu','menu-1'] : ['nav-down-menu','menu-3','menu-1']" style="display: none;" :_t_nav="i.id">
+                    <div class="navigation-down-inner">
+                        <dl v-for="item in i.childrenlist" :style="item.id == '1' ? {'margin-left': i.leftlength}:''">
+                            <dt v-if="item.label !=''">{{item.label}}</dt>
+                            <dd v-for="y in item.hreflist">
+                                <a class="link" :data-href="y.href" href="javascript:void(0)" @click="openPage">{{y.label}}</a>
+                            </dd>
+                        </dl>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="container" class="main-container">
+        <div class="container-left">
+            <div class="container-left-top">
+                <div class="panel">
+                    <div class="panel-title">
+                        用户信息
+                    </div>
+                    <hr style="height:1px;border:none;border-top:1px solid #555555;width: 90%;margin-left: 5%" />
+                    <div class="panel-body">
+                        <div style="margin-top: 15px">
+                            <span>姓名</span>
+                        </div>
+                        <div style="margin-top: 15px">
+                            <span>权限</span>
+                        </div>
+                        <div style="margin-top: 15px">
+                            <span>手机</span>
+                        </div>
+                        <div style="margin-top: 25px;text-align: center">
+                            <el-button type="info" icon="el-icon-edit-outline" plain>修改密码</el-button>
+                            <el-button type="info" icon="el-icon-star-off" plain>退出登录</el-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-left-bottom">
+                <div class="panel">
+                    <div class="panel-title">
+                        最新报警短信
+                    </div>
+                    <hr style="height:1px;border:none;border-top:1px solid #555555;width: 90%;margin-left: 5%" />
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-right">
+            <div class="panel">
+                <div class="nav-tab">
+                    <el-breadcrumb separator=">>">
+                        <el-breadcrumb-item v-for="item in breadcrumbList">{{item}}</el-breadcrumb-item>
+                    </el-breadcrumb>
+                </div>
+                <div class="iframe-area">
+                    <iframe :src="currentSrc" frameborder="0"  width="100%" height="100%"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../plugins/vue/vue.js"></script>
+<script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+<script type="text/javascript" src="../js/main.js"></script>
+</body>
+</html>

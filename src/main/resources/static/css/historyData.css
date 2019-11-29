@@ -1,0 +1,50 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+.panel-charts{
+    width: 100%;
+    height: 33.3%;
+    box-sizing: border-box;
+    padding: 10px 0;
+}
+.charts-container{
+    width: 100%;
+    height: 100%;
+    background: #e3f6f5;
+}
+
+.charts-title{
+    position: relative;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+.btn{
+    position: absolute;
+    top: 50%;
+    transform: translate(0,-50%);
+    right: 160px;
+    width: 80px;
+}
+.date-area{
+    position: absolute;
+    top: 50%;
+    transform: translate(0,-50%);
+    right: 20px;
+    width: 120px;
+    font-weight: normal;
+    font-size: 16px;
+    cursor: pointer;
+    vertical-align: middle;
+    color: #0fa081;
+}
+.charts{
+    width: 100%;
+    height: calc(100% - 40px);
+}

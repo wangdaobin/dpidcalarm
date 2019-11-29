@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>不合格率统计</title>
+    <link rel="stylesheet" type="text/css" href="../plugins/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element-ext.css">
+    <link rel="stylesheet" type="text/css" href="../css/collect_data_count.css"/>
+</head>
+<body>
+    <div class="container" id="container">
+        <el-tabs type="border-card" style="height: calc(100% - 2px);position: relative">
+            <el-tab-pane label="单独合格率">
+                <div class="condition-container" v-cloak>
+                    <label>时间:&nbsp;</label>
+                    <el-date-picker
+                            v-model="date1"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                    <label>&nbsp;至&nbsp;</label>
+                    <el-date-picker
+                            v-model="date2"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                    <el-button type="primary" style="margin-left: 30px" icon="el-icon-search" @click="query_single">查询</el-button>
+                    <el-button type="primary" style="margin-left: 30px" icon="el-icon-download" @click="download_single">导出</el-button>
+                    <el-button type="primary" style="margin-left: 30px" icon="el-icon-pie-chart" @click="openErrorDevCountPage">错误设备统计</el-button>
+                </div>
+                <div class="table-container">
+                    <template>
+                        <el-table
+                                :data="tableData_single"
+                                height="100%"
+                                stripe border
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="facName"
+                                    label="厂站名"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="idcName"
+                                    label="单独合格率"
+                                    width="200px"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="collectTime"
+                                    label="采集时间"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="errorNum"
+                                    label="出错设备数量"
+                                    width="160px"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column label="操作" width="180px" align="center">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            type="primary"
+                                            size="mini"
+                                            @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+
+                </div>
+                <div class="page-container">
+                    <el-pagination
+                            background
+                            layout="prev, pager, next"
+                            :total="1000">
+                    </el-pagination>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="业务数据传输可用率">
+                <div class="condition-container" v-cloak>
+                    <label>时间:&nbsp;</label>
+                    <el-date-picker
+                            v-model="date1"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                    <label>&nbsp;至&nbsp;</label>
+                    <el-date-picker
+                            v-model="date1"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                    <el-button type="primary" style="margin-left: 30px" icon="el-icon-search" >查询</el-button>
+                    <el-button type="primary" style="margin-left: 30px" icon="el-icon-download">导出</el-button>
+                </div>
+                <div class="table-container">
+                    <template>
+                        <el-table
+                                :data="tableData_single"
+                                height="100%"
+                                stripe border
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="date"
+                                    label="厂站名"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="问题点数"
+                                    width="200px"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="address"
+                                    label="采集时间"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column label="操作" width="180px" align="center">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            size="mini"
+                                            @click="">查看详情</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </div>
+                <div class="page-container">
+                    <el-pagination
+                            background
+                            layout="prev, pager, next"
+                            :total="1000">
+                    </el-pagination>
+                </div>
+            </el-tab-pane>
+        </el-tabs>
+        <!-- 错误设备数统计 -->
+        <div class="error-dev-count" id="error_dev_count">
+            <template>
+                <el-table
+                        :data="tableData_error_dev"
+                        height="500px"
+                        stripe border
+                        style="width: 100%">
+                    <el-table-column
+                            prop="devName"
+                            label="设备名称"
+                            align="center">
+                    </el-table-column>
+                    <el-table-column
+                            prop="errorCount"
+                            label="错误次数"
+                            align="center">
+                    </el-table-column>
+                </el-table>
+            </template>
+        </div>
+        <!-- 错误设备数统计 -->
+        <div class="error-dev-count" id="dev_detail">
+            <template>
+                <el-table
+                        :data="tableData_dev_detail"
+                        height="500px"
+                        stripe border
+                        style="width: 100%">
+                    <el-table-column
+                            prop="devName"
+                            label="设备名称"
+                            align="center">
+                    </el-table-column>
+                    <el-table-column
+                            prop="value"
+                            label="量测值">
+                    </el-table-column>
+                    <el-table-column
+                            prop="valuePre"
+                            label="估计值">
+                    </el-table-column>
+                </el-table>
+            </template>
+        </div>
+
+    </div>
+    <script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="../plugins/vue/vue.js"></script>
+    <script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+    <script type="text/javascript" src="../js/ajaxUtil.js"></script>
+    <script type="text/javascript" src="../js/utils.js"></script>
+    <script type="text/javascript" src="../js/collect_data_count.js"></script>
+</body>
+</html>

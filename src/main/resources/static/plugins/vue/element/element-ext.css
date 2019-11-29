@@ -1,0 +1,10 @@
+.el-table thead{
+    color: #fff;
+    font-size: 16px;
+}
+.el-table th{
+    text-align: center;
+    white-space: nowrap;
+    background: #3bb5a0;
+}
+

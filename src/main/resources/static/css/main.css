@@ -1,0 +1,161 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+.header{
+    box-sizing: border-box;
+    width: 100%;
+    background: #00706b;
+    padding-left: 30px;
+}
+html{font-size:62.5%;font-family:'helvetica neue',tahoma,arial,'hiragino sans gb','Simsun',sans-serif}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td,hr{margin:0;padding:0}
+body{line-height:1.333;font-size:12px}
+li{list-style:none}
+a:link,a:visited{text-decoration:none}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-family:arial,'hiragino sans gb','microsoft yahei','Simsun',sans-serif}
+/*VUE*/
+[v-cloak]{
+    display: none !important;
+}
+
+/*视窗概念不同屏幕根据此视窗大小 进行放缩*/
+.viewport{
+
+    width: 1920px;
+    height: 969px;
+    transform: scale(1);
+    transform-origin: top left;
+    transition: all 0.3s linear 0.1s;
+    margin-left: 0;
+    margin-top: 0;
+    position: relative;
+}
+
+/*内容*/
+.main-container{
+    width: 100%;
+    position: absolute;
+    top: 80px;
+    bottom: 0;
+    font-size: 0;
+    background: whitesmoke;
+}
+/*左侧*/
+.container-left{
+    display: inline-block;
+    vertical-align: middle;
+    width: 350px;
+    height: 100%;
+}
+.container-left-top{
+    width: 100%;
+    box-sizing: border-box;
+    height: 30%;
+    padding: 10px 15px;
+}
+.container-left-bottom{
+    width: 100%;
+    box-sizing: border-box;
+    height: 70%;
+    padding: 0 15px 10px;
+}
+/*右侧*/
+.container-right{
+    display: inline-block;
+    vertical-align: middle;
+    width: calc(100% - 350px);
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px 15px 10px 0;
+}
+
+.title{
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 220px;
+    height: 80px;
+    line-height: 80px;
+    background: url("../images/main/LOGO1-GW.png") no-repeat left bottom;
+    background-size: auto 90%;
+    font-weight: bold;
+    font-size: 2.5rem;
+    color: #FFFFFF;
+}
+/*菜单部分*/
+.head-v3{position:relative;z-index:100;min-width:1000px;display: inline-block;vertical-align: middle}
+.head-v3 .navigation-inner{margin:0 auto;width:980px;position:relative}
+.navigation-up{height:80px;background:#00706b}
+.navigation-up .navigation-v3{margin-left:155px;float:left;_margin-left:10px}
+.navigation-up .navigation-v3 ul{float:left}
+.navigation-up .navigation-v3 li{float:left;font:normal 20px/79px "microsoft yahei";color:#fff}
+.navigation-up .navigation-v3 .nav-up-selected{background:#60c888}
+.navigation-up .navigation-v3 .nav-up-selected-inpage{background:#0fa081}
+.navigation-up .navigation-v3 li h2{font-weight:normal;padding:0;margin:0}
+.navigation-up .navigation-v3 li h2 a{padding:0 25px;color:#fff;display:inline-block;height:80px;font-family:"microsoft yahei"}
+
+.navigation-down{position:absolute;top:80px;left:0px;width:100%}
+.navigation-down .nav-down-menu{width:100%;margin:0;background:#60c889;position:absolute;top:0px}
+.navigation-down .nav-down-menu .navigation-down-inner{margin:auto;width:1200px;position:relative}
+.navigation-down .nav-down-menu dl{float:left;margin:18px 80px 18px 0}
+.navigation-down .menu-1 dl{margin:20px 80px 25px 0}
+.navigation-down .menu-1 dt{font:normal 16px "microsoft yahei";color:#61789e;padding-bottom:10px;border-bottom:1px solid #61789e;margin-bottom:10px}
+.navigation-down .menu-1 dd a{color:#fff;font:normal 14px/30px "microsoft yahei"}
+.navigation-down .menu-1 dd a:hover{color:#2980b9}
+.navigation-down .menu-2 dd a,.navigation-down .menu-3 dd a{color:#fff;font:normal 16px "microsoft yahei"}
+
+/*用户信息*/
+.panel{
+    background-color: #fff;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+
+}
+.panel-title{
+    width: 100%;
+    height: 25px;
+    line-height: 25px;
+    font-size: 16px;
+    text-align: center;
+    color: #0fa081;
+    font-weight: bold;
+}
+.panel-body{
+    box-sizing: border-box;
+    width: 100%;
+    height: calc(100% - 27px);
+    padding: 8px 6%;
+    font-size: 2rem;
+}
+.nav-tab{
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    box-sizing: border-box;
+    padding: 10px 15px;
+}
+.iframe-area{
+    width: 100%;
+    height: calc(100% - 30px);
+    box-sizing: border-box;
+    padding: 10px 15px;
+}
+.el-breadcrumb__inner{
+    font-size: 18px;
+    color: #0fa081;
+    font-weight: bold;
+}
+.el-breadcrumb__separator {
+    margin: 0 9px;
+    font-weight: 700;
+    color: #0fa081;
+}
+.el-breadcrumb__item:last-child .el-breadcrumb__inner, .el-breadcrumb__item:last-child .el-breadcrumb__inner a, .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover, .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
+    font-weight: bold;
+    color: #0fa081;
+    cursor: text;
+}
+
