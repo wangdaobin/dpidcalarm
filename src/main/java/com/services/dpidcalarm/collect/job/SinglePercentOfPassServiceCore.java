@@ -52,6 +52,7 @@ public class SinglePercentOfPassServiceCore extends ThreadCommon
     private Map<String, Float> stationMap;
     private List<ErrorResult> ers = new ArrayList();
 
+    //每隔1s执行一次
     public void run()
     {
         boolean action = true;
@@ -63,8 +64,9 @@ public class SinglePercentOfPassServiceCore extends ThreadCommon
         while (action) {
             Calendar calendar = Calendar.getInstance();
             //取出当前分钟
-            int minute = calendar.get(12);
+            int minute = calendar.get(Calendar.MINUTE);
             if (minute % 5 == 0) {
+                //每整5分钟执行一次
                 logger.info("=================================START=================================");
                 CloseableHttpClient client = null;
                 try {
@@ -90,6 +92,7 @@ public class SinglePercentOfPassServiceCore extends ThreadCommon
                     e.printStackTrace();
                     logger.error("登录时连接服务器异常，线程暂停2秒后重新连接");
                     try {
+                        //休眠两秒钟
                         Thread.currentThread(); Thread.sleep(2000L);
                     } catch (InterruptedException e1) {
                         e1.printStackTrace();
@@ -115,9 +118,11 @@ public class SinglePercentOfPassServiceCore extends ThreadCommon
                  * 4,4,20,,2,4,5,0,{厂站名}:{错误点数};nk%&^%&^tuy7ti7tviiyi7tuytut879t68,2
                  */
                 //取出当前天
-                int day = calendar.get(7);
-                //取出来的为第一行 单独合格率
-                PropertiesConfiguration configuration = this.propertiesConfigurationService.findConfig(Integer.valueOf((day == 7) || (day == 1) ? 1 : 0), Integer.valueOf(1));
+                int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+                int isWeekEnd = (day ==Calendar.SUNDAY ) || (day == Calendar.SATURDAY ) ? 1 : 0;
+                //取出来的为第一行 单独合格率, 第一个参数是否是周末，第二个参数是指标id
+                PropertiesConfiguration configuration = this.propertiesConfigurationService.findConfig(isWeekEnd, 1);
                 //用户指标表中没有数据？应该是拿对应指标中的用户，再把电话号码拿出来
                 // List<User> users = this.userDao.findByIndicator(Integer.valueOf(1));
                 Set<String> phoneList = new HashSet();
