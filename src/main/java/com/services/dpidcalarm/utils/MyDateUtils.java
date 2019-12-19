@@ -21,21 +21,21 @@ public class MyDateUtils {
     }
 
     /**
-     * 返回字符串形式的天的毫秒值
+     * 返回long形式的天的毫秒值
      * @return
      */
-    public static String getCurrentDayMillisStr(String dayStr){
+    public static long getCurrentDayMillis(String dayStr){
         if(null==dayStr){
-            return null;
+            return 0L;
         }
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = formatter.parse(dayStr);
             long time = date.getTime();
-            return  String.valueOf(time);
+            return  time;
         }catch (Exception e){
             e.printStackTrace();
-            return null;
+            return 0L;
         }
     }
 }

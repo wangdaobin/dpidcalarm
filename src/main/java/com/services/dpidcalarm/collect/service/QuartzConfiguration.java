@@ -65,7 +65,7 @@ public class QuartzConfiguration {
 
         //cron表达式，每30秒钟执行一次
         tigger.setCronExpression("*/30 * * * * ?");
-        logger.error("cron表达式，每5秒钟执行一次");
+        logger.error("cron表达式，每30秒钟执行一次");
         tigger.setName("reptilianTrigger");
         return tigger;
     }

@@ -120,19 +120,19 @@ public class CollectScoreByForm
             String table = json.getString("table");
             //开始时间
             String startDay = json.getString("startDay");
-            String currentDayStr = MyDateUtils.getCurrentDayMillisStr(startDay);
+            long currentDayMillis = MyDateUtils.getCurrentDayMillis(startDay);
 
             //解析datas
             JSONArray datas = json.getJSONArray("datas");
-            if(null!=currentDayStr && null!=datas && datas.length()>0){
+            if( null!=datas && datas.length()>0){
                 for(int i=0; i<datas.length(); i++){
                     JSONObject xyObj = datas.getJSONObject(i);
                     //x 值如果为当天，则取出值
-                    String xValue = xyObj.getString("x");
-                    if(currentDayStr.equals(xValue)){
-                        String currentScore = xyObj.getString("x");
-                        this.logger.info("开关位置情况--当前分数为：" + currentScore);
-                        System.out.println("开关位置情况--当前分数为：" + currentScore);
+                    long xValue = (long) xyObj.get("x");
+                    if(currentDayMillis == xValue){
+                        double currentScore = (double)xyObj.get("y");
+                        this.logger.info("当前分数为：" + currentScore);
+                        System.out.println("当前分数为：" + currentScore);
                         //todo
                         //写库
                         return true;

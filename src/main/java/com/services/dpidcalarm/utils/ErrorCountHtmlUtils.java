@@ -1,5 +1,7 @@
 package com.services.dpidcalarm.utils;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
@@ -45,8 +47,57 @@ public class ErrorCountHtmlUtils {
         }
         return map;
     }
+
+    public static boolean dealcurrentScore(String jsonStrResult){
+        //1、解析json
+        jsonStrResult = "{\"com\":\"113715891329302534\",\"countNo\":null,\"datas\":[{\"x\":1575129600000,\"y\":100.0},{\"x\":1575216000000,\"y\":99.91},{\"x\":1575302400000,\"y\":99.99},{\"x\":1575388800000,\"y\":99.92},{\"x\":1575475200000,\"y\":99.94},{\"x\":1575561600000,\"y\":99.95},{\"x\":1575648000000,\"y\":99.96},{\"x\":1575734400000,\"y\":99.88},{\"x\":1575820800000,\"y\":99.99},{\"x\":1575907200000,\"y\":99.99},{\"x\":1575993600000,\"y\":99.99},{\"x\":1576080000000,\"y\":99.89}],\"name\":\"正确率\",\"startDay\":\"2019-12-12\",\"table\":\"bk_con_cord_5\"}";
+        if(null==jsonStrResult){
+            return false;
+        }
+        try {
+            JSONObject json = new JSONObject(jsonStrResult);
+            //公司
+            String com = json.getString("com");
+            //表
+            String table = json.getString("table");
+            //开始时间
+            String startDay = json.getString("startDay");
+            long currentDayStr = 1576080000000L;
+            // MyDateUtils.getCurrentDayMillisStr(startDay);
+
+            //解析datas
+            JSONArray datas = json.getJSONArray("datas");
+            if( null!=datas && datas.length()>0){
+                for(int i=0; i<datas.length(); i++){
+                    JSONObject xyObj = datas.getJSONObject(i);
+                    //x 值如果为当天，则取出值
+                    long xValue = (long) xyObj.get("x");
+
+                    if(currentDayStr == xValue){
+                        double currentScore = (double)xyObj.get("y");
+                        System.out.println("开关位置情况--当前分数为：" + currentScore);
+                        //todo
+                        //写库
+                        return true;
+                    }
+                }
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+
+
+
+
+        //2、写库
+        return false;
+    }
     public static void main(String[] args) {
-        String aa = MyDateUtils.getCurrentDayMillisStr("2019-12-11");
+        ErrorCountHtmlUtils.dealcurrentScore("aaa");
+
 
         File file  = new File("E:\\31-重庆\\网站数据\\指标20191212\\01变电站刷新\\变电站刷新-详细-.html");
         try {

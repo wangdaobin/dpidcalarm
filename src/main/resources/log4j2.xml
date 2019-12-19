@@ -5,7 +5,7 @@
 （2）需要注意日志文件备份数和日志文件大小，注意预留目录空间
 （3）实际部署的时候backupFilePatch变量需要修改成linux目录
  -->
-<configuration status="warn">
+<configuration status="debug">
     <Properties>
         <!--获取home路径${sys:catalina.base}-->
         <!--<Property name="LOG_HOME">${sys:catalina.base}/var/logs</Property>-->
@@ -17,7 +17,7 @@
         <!--这个输出控制台的配置-->
         <Console name="Console" target="SYSTEM_OUT">
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY" />
             <!-- 输出日志的格式-->
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n" />
         </Console>
@@ -36,12 +36,12 @@
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
         <!--建立一个默认的root的logger-->
-        <Logger name="org.apache.log4j.xml" level="warn"
+        <Logger name="org.apache.log4j.xml" level="trace"
                 additivity="true">
             <AppenderRef ref="RollingFile" />
             <AppenderRef ref="Console" />
         </Logger>
-        <Root level="warn">
+        <Root level="info">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile"/>
         </Root>
