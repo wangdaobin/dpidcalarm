@@ -1,5 +1,6 @@
 package com.services.dpidcalarm.collect.job;
 
+import com.services.dpidcalarm.utils.ErrorCountHtmlUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -14,7 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description：变电站遥测刷新率
@@ -67,10 +70,32 @@ public class CollectDataBDZYCSX
      * @return
      * @throws IOException
      */
-    public String getErrorCount(String url, String param1, String param2, String param3 )
-            throws IOException
-    {
-        HttpGet get = new HttpGet("http://10.55.6.114/check/WarnReport_WarnReport.gc?tableType=city&field=南岸&dataType=day&dianshu=5");
-        return EntityUtils.toString(client.execute(get).getEntity());
+    public String getDetailsHtml(String url, String param1, String param2, String param3 ) {
+        try{
+            HttpGet get = new HttpGet("http://10.55.6.114/check/WarnReport_WarnReport.gc?tableType=city&field=南岸&dataType=day&dianshu=5");
+            return EntityUtils.toString(client.execute(get).getEntity());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    public double getCurrentScore(String detailsHtml){
+        //1、解析html，解析
+        Map<String, String> resultMap =  ErrorCountHtmlUtils.getCountMap(detailsHtml);
+        //key:重庆.长寿.涪陵.桥南站    value:34;0.09
+        if(resultMap.size()==0){
+            //没有问题，100分
+            return 100;
+        }
+        double currentScore = 100.0;
+        for (String value : resultMap.values()){
+            String scoreStr = value.split(";")[1];
+            double tempScore = Double.parseDouble(scoreStr);
+            currentScore = currentScore - tempScore;
+
+        }
+        return currentScore ;
     }
 }

@@ -21,13 +21,13 @@ public class ErrorCountHtmlUtils {
     public static Map<String, String> getCountMap(String html)
     {
         //Pattern pattern = compile("*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport*;\">(\d+)</a></td>*");
-        String html1 = "<td class=\"td\"><a href=\"javascript:void(0);\" onclick=\"warnStationReport('重庆.长寿.涪陵.蔺市站');\">0</a></td>" +
-                "<td class=\"td\">0</td>" +
-                "</tr>" +
-                "<tr>" +
-                "<td class=\"td\" style=\"text-align: left;\">重庆.长寿.涪陵.大桥站</td>" +
-                "<td class=\"td\"><a href=\"javascript:void(0);\" onclick=\"warnStationReport('重庆.长寿.涪陵.大桥站');\">247</a></td>" +
-                "<td class=\"td\" style=\"color: red;\">0.66</td>";
+        // String html1 = "<td class=\"td\"><a href=\"javascript:void(0);\" onclick=\"warnStationReport('重庆.长寿.涪陵.蔺市站');\">0</a></td>" +
+        //         "<td class=\"td\">0</td>" +
+        //         "</tr>" +
+        //         "<tr>" +
+        //         "<td class=\"td\" style=\"text-align: left;\">重庆.长寿.涪陵.大桥站</td>" +
+        //         "<td class=\"td\"><a href=\"javascript:void(0);\" onclick=\"warnStationReport('重庆.长寿.涪陵.大桥站');\">247</a></td>" +
+        //         "<td class=\"td\" style=\"color: red;\">0.66</td>";
         //Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.([\\u4e00-\\u9fa5]+)'\\);\">(\\d+)</a></td>.*");
         //Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.([\\u4e00-\\u9fa5]+)'\\);\">(\\d+)</a></td>.*");
         Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('(.*)'\\);\">(\\d+)</a></td>\\W*" +
@@ -96,14 +96,15 @@ public class ErrorCountHtmlUtils {
         return false;
     }
     public static void main(String[] args) {
-        ErrorCountHtmlUtils.dealcurrentScore("aaa");
+
 
 
         File file  = new File("E:\\31-重庆\\网站数据\\指标20191212\\01变电站刷新\\变电站刷新-详细-.html");
         try {
             String fileContent = FileUtils.readFileToString(file);
             Map<String,String> map = ErrorCountHtmlUtils.getCountMap(fileContent);
-            System.out.println(map);
+            // double currentScore = ErrorCountHtmlUtils.getCurrentScore(fileContent);
+            //System.out.println(currentScore);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -111,4 +112,22 @@ public class ErrorCountHtmlUtils {
 
         ;
     }
+
+    // public static  double getCurrentScore(String detailsHtml){
+    //     //1、解析html，解析
+    //     Map<String, String> resultMap =  ErrorCountHtmlUtils.getCountMap(detailsHtml);
+    //     //key:重庆.长寿.涪陵.桥南站    value:34;0.09
+    //     if(resultMap.size()==0){
+    //         //没有问题，100分
+    //         return 100;
+    //     }
+    //     Double currentScore = 100.0;
+    //     for (String value : resultMap.values()){
+    //         String scoreStr = value.split(";")[1];
+    //         double tempScore = Double.parseDouble(scoreStr);
+    //         currentScore = currentScore - tempScore;
+    //
+    //     }
+    //     return currentScore ;
+    // }
 }

@@ -52,10 +52,10 @@ public class CollectScoreByForm
             HttpPost post = new HttpPost("http://10.55.6.114/Loginout.gc");
             post.setEntity(entity);
             HttpResponse response = client.execute(post);
-            this.logger.info("开关位置情况--登录：" + EntityUtils.toString(response.getEntity()));
+            this.logger.info("登录结果：" + EntityUtils.toString(response.getEntity()));
             return true;
         } catch (Exception e){
-            this.logger.info("开关位置情况--登录出错，错误内容: " + e.getMessage());
+            this.logger.info("登录出错，错误内容: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -70,7 +70,7 @@ public class CollectScoreByForm
      * @return
      * @throws IOException
      */
-    public String getCurrentScore(String scoreURL, String compony, String table, String startDay ){
+    public String getCurrentScoreJSON(String scoreURL, String compony, String table, String startDay ){
         try{
             // //url
             // HttpPost post = new HttpPost("http://10.55.6.114/analysis/Daycord_j.gc");
@@ -82,35 +82,40 @@ public class CollectScoreByForm
             // String currentDay = MyDateUtils.getCurrentDayStr();
 
             HttpPost post = new HttpPost(scoreURL);
+            //参数列表
+            List paramlist = new ArrayList();
             //公司
             NameValuePair compony_nvp = new BasicNameValuePair("com", compony);
+            paramlist.add(compony_nvp);
             //表名
-            NameValuePair table_nvp = new BasicNameValuePair("table", table);
+            NameValuePair table_nvp = null;
+            if(table!=null){
+                //表名
+                table_nvp = new BasicNameValuePair("table", table);
+                paramlist.add(table_nvp);
+            }
             //开始日期
             NameValuePair startDay_nvp = new BasicNameValuePair("startDay", startDay);
-            List list = new ArrayList();
-            list.add(compony_nvp);
-            list.add(table_nvp);
-            list.add(startDay_nvp);
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list);
+            paramlist.add(startDay_nvp);
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(paramlist);
             //设置参数
             post.setEntity(entity);
             //执行post请求
             HttpResponse response = client.execute(post);
-            String rusult = EntityUtils.toString(response.getEntity());
-            this.logger.info("开关位置情况获取结果：" + rusult);
-            return rusult;
+            String resultJSON = EntityUtils.toString(response.getEntity());
+            this.logger.info("详情获取结果：" + resultJSON);
+            return resultJSON;
         }catch (Exception e){
-            this.logger.info("开关位置情况获取出错，错误内容: " + e.getMessage());
+            this.logger.info("详情获取出错，错误内容: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
-    public boolean dealcurrentScore(String jsonStrResult){
+    public double dealcurrentScoreJSON(String jsonStrResult){
         //1、解析json
         //json样例{"com":"113715891329302534","countNo":null,"datas":[{"x":1575129600000,"y":100.0},{"x":1575216000000,"y":99.91},{"x":1575302400000,"y":99.99},{"x":1575388800000,"y":99.92},{"x":1575475200000,"y":99.94},{"x":1575561600000,"y":99.95},{"x":1575648000000,"y":99.96},{"x":1575734400000,"y":99.88},{"x":1575820800000,"y":99.99},{"x":1575907200000,"y":99.99},{"x":1575993600000,"y":99.99},{"x":1576080000000,"y":99.89}],"name":"正确率","startDay":"2019-12-12","table":"bk_con_cord_5"}
         if(null==jsonStrResult){
-            return false;
+            return -1;
         }
         try {
             JSONObject json = new JSONObject(jsonStrResult);
@@ -132,10 +137,8 @@ public class CollectScoreByForm
                     if(currentDayMillis == xValue){
                         double currentScore = (double)xyObj.get("y");
                         this.logger.info("当前分数为：" + currentScore);
-                        System.out.println("当前分数为：" + currentScore);
-                        //todo
-                        //写库
-                        return true;
+                        // System.out.println("当前分数为：" + currentScore);
+                        return currentScore;
                     }
                 }
 
@@ -144,11 +147,6 @@ public class CollectScoreByForm
         }catch (Exception e){
 
         }
-
-
-
-
-        //2、写库
-        return false;
+        return -1;
     }
 }

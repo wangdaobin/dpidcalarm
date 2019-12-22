@@ -58,14 +58,13 @@ public class QuartzConfiguration {
      */
     @Bean(name = "jobTrigger")
     public CronTriggerFactoryBean cronJobTrigger(JobDetail reptilianJob){
-
         CronTriggerFactoryBean tigger = new CronTriggerFactoryBean();
 
         tigger.setJobDetail(reptilianJob);
 
-        //cron表达式，每30秒钟执行一次
-        tigger.setCronExpression("*/30 * * * * ?");
-        logger.error("cron表达式，每30秒钟执行一次");
+        //cron表达式，每整钟执行一次
+        tigger.setCronExpression("0 0/5 * * * ? ");
+        logger.info("cron表达式，每整5钟执行一次");
         tigger.setName("reptilianTrigger");
         return tigger;
     }
