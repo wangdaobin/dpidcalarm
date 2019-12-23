@@ -86,7 +86,9 @@ public class QuartzTask {
         //url
         String scoreURL = "http://10.55.6.114/analysis/Daycord_j.gc";
         //公司
-        String compony = "113715891329302534";
+        //
+        // String compony = "113715891329302534";
+        String compony = "113715891329302535";
         //*************2、开关指标得分*************//
         //开关表名
         String table_kg = "bk_con_cord_5";
