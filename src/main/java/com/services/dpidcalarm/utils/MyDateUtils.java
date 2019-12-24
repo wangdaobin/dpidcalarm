@@ -19,6 +19,12 @@ public class MyDateUtils {
         String  currentDay = formatter.format(date);
         return  currentDay;
     }
+    public static String getYesterdayDayStr(){
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(System.currentTimeMillis()-24*60*60*1000);
+        String  yesterday = formatter.format(date);
+        return  yesterday;
+    }
 
     /**
      * 返回long形式的天的毫秒值

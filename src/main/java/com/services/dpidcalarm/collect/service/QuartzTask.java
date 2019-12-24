@@ -62,7 +62,7 @@ public class QuartzTask {
         logger.info("变电站遥测刷新指标数据：resultHTML：" + detailsHtml);
         double scoreBDZYCSX =  collectDataBDZYCSX.getCurrentScore(detailsHtml);
         logger.info("变电站遥测刷新指标得分：" + scoreBDZYCSX);
-        if(scoreBDZYCSX < limitValue && "1".equals(sendFlag)){
+        if(scoreBDZYCSX < limitValue && 1==(sendFlag)){
             smsService.sendSms(phone, "变电站遥测刷新指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
             logger.info("变电站遥测刷新指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr + "发送短息到" + phone);
         }
@@ -101,9 +101,10 @@ public class QuartzTask {
         logger.info("开关指标得分获取结果：resultJSON：" + resultJSON);
         double scoreKGZB = collectScoreByForm.dealcurrentScoreJSON(resultJSON);
         logger.info("开关指标得分：" + scoreKGZB);
-        if(scoreKGZB < limitValue && "1".equals(sendFlag)){
-            smsService.sendSms(phone, "开关指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
+        if(scoreKGZB < limitValue && 1==sendFlag){
             logger.info("开关指标得分" + scoreKGZB + "，小于限值" + limitValueStr + "发送短息到" + phone);
+            smsService.sendSms(phone, "开关指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
+
         }
 
 
@@ -116,24 +117,26 @@ public class QuartzTask {
         logger.info("遥测遥信获取结果：resultJSON：" + resultJSON_ycyx);
         double scoreYCYX = collectScoreByForm.dealcurrentScoreJSON(resultJSON_ycyx);
         logger.info("遥测遥信得分：" + scoreYCYX);
-        if(scoreYCYX < limitValue && "1".equals(sendFlag)){
-            smsService.sendSms(phone, "遥测遥信得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
+        if(scoreYCYX < limitValue && 1 == sendFlag){
             logger.info("遥测遥信得分" + scoreYCYX + "，小于限值" + limitValueStr + "发送短息到" + phone);
+            smsService.sendSms(phone, "遥测遥信得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
+
         }
 
         //*************3、积分电量得分*************
-        //开始日期为当前时期
         String scoreURL_jfdl = "http://10.55.6.114/analysis/TmrJFMonthCord_j.gc";
         String compony_jfdl = "南岸分公司";
-        String resultJSON_jfdl = collectScoreByForm.getCurrentScoreJSON(scoreURL_jfdl,compony_jfdl,null,currentDay);
+        //开始日期为当前时期
+        String yesterdayStr = MyDateUtils.getYesterdayDayStr();
+        String resultJSON_jfdl = collectScoreByForm.getCurrentScoreJSON(scoreURL_jfdl,compony_jfdl,null,yesterdayStr);
         // System.out.println("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
         logger.info("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
         double scoreJFDL = collectScoreByForm.dealcurrentScoreJSON(resultJSON_jfdl);
         logger.info("积分电量得分：" + scoreJFDL);
-        if(scoreJFDL < limitValue && "1".equals(sendFlag)){
-            smsService.sendSms(phone, "积分电量的获取结果" + scoreJFDL + "，小于限值" + limitValueStr);
-            logger.info("积分电量的获取结果" + scoreYCYX + "，小于限值" + limitValueStr + "发送短息到" + phone);
-        }
+        // if(scoreJFDL < limitValue && "1".equals(sendFlag)){
+        //     smsService.sendSms(phone, "积分电量的获取结果" + scoreJFDL + "，小于限值" + limitValueStr);
+        //     logger.info("积分电量的获取结果" + scoreYCYX + "，小于限值" + limitValueStr + "发送短息到" + phone);
+        // }
 
 
     }

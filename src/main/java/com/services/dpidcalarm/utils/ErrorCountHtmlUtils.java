@@ -97,6 +97,7 @@ public class ErrorCountHtmlUtils {
     }
     public static void main(String[] args) {
 
+        String str = MyDateUtils.getYesterdayDayStr();
 
 
         File file  = new File("E:\\31-重庆\\网站数据\\指标20191212\\01变电站刷新\\变电站刷新-详细-.html");
