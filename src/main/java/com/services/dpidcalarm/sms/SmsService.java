@@ -27,7 +27,10 @@ public class SmsService
             Thread.currentThread();
             Thread.sleep(5000L);
         }catch (Exception e){
-            logger.info("发送短信失败：" + e.getMessage());
+            logger.error("发送短信失败：" + e.getMessage());
+            e.printStackTrace();
+        }catch (Throwable e){
+            logger.error("发送短信失败：" + e.getMessage());
             e.printStackTrace();
         }
 

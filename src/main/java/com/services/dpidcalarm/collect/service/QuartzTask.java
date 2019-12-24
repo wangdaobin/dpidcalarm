@@ -1,5 +1,6 @@
 package com.services.dpidcalarm.collect.service;
 
+import com.services.dpidcalarm.collect.dao.IndicatorDataDao;
 import com.services.dpidcalarm.collect.job.CollectDataBDZYCSX;
 import com.services.dpidcalarm.collect.job.CollectScoreByForm;
 import com.services.dpidcalarm.sms.SmsService;
@@ -9,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,9 @@ public class QuartzTask {
     @Value("${limit.value}")
     private String limitValueStr;
 
+    @Autowired
+    private IndicatorDataDao indicatorDataDao;
+
 
     public void reptilian1(){
         //指标数据获取
@@ -50,7 +55,9 @@ public class QuartzTask {
         logger.info("参数-是否发送：" + sendFlag);
         logger.info("参数-限值：" + limitValueStr);
         logger.info("参数-发送号码：" + phone);
-        double limitValue =  Double.parseDouble(limitValueStr);;
+        double limitValue =  Double.parseDouble(limitValueStr);
+        long currentTime = System.currentTimeMillis();
+
 
 
 
@@ -66,6 +73,9 @@ public class QuartzTask {
             smsService.sendSms(phone, "变电站遥测刷新指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
             logger.info("变电站遥测刷新指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr + "发送短息到" + phone);
         }
+
+        //存储指标
+        indicatorDataDao.insertIndicatorData(1,(float)scoreBDZYCSX , new Date(currentTime));
 
 
 
@@ -107,6 +117,9 @@ public class QuartzTask {
 
         }
 
+        //存储指标
+        indicatorDataDao.insertIndicatorData(2,(float)scoreKGZB , new Date(currentTime));
+
 
         //*************3、遥测遥信得分*************
         //遥测遥信表名
@@ -123,6 +136,9 @@ public class QuartzTask {
 
         }
 
+        //存储指标
+        indicatorDataDao.insertIndicatorData(3,(float)scoreYCYX , new Date(currentTime));
+
         //*************3、积分电量得分*************
         String scoreURL_jfdl = "http://10.55.6.114/analysis/TmrJFMonthCord_j.gc";
         String compony_jfdl = "南岸分公司";
@@ -137,6 +153,9 @@ public class QuartzTask {
         //     smsService.sendSms(phone, "积分电量的获取结果" + scoreJFDL + "，小于限值" + limitValueStr);
         //     logger.info("积分电量的获取结果" + scoreYCYX + "，小于限值" + limitValueStr + "发送短息到" + phone);
         // }
+        //存储指标
+        indicatorDataDao.insertIndicatorData(4,(float)scoreJFDL , new Date(currentTime));
+
 
 
     }
