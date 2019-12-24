@@ -43,7 +43,7 @@ public class CollectDataBDZYCSX
      */
     public boolean login(String loginURL, String user, String pwd){
         try {
-            CloseableHttpClient client = HttpClients.createDefault();
+            this.client = HttpClients.createDefault();
             NameValuePair username = new BasicNameValuePair("user", "gtzh");
             NameValuePair password = new BasicNameValuePair("pass", "123456");
             List list = new ArrayList();
@@ -73,9 +73,13 @@ public class CollectDataBDZYCSX
     public String getDetailsHtml(String url, String param1, String param2, String param3 ) {
         try{
             HttpGet get = new HttpGet("http://10.55.6.114/check/WarnReport_WarnReport.gc?tableType=city&field=南岸&dataType=day&dianshu=5");
-            return EntityUtils.toString(client.execute(get).getEntity());
+            return EntityUtils.toString(this.client.execute(get).getEntity());
         }catch (Exception e){
             e.printStackTrace();
+            logger.error(e.getMessage());
+        }catch (Throwable e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
 
