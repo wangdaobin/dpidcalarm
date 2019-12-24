@@ -50,7 +50,9 @@ public class QuartzTask {
         logger.info("参数-是否发送：" + sendFlag);
         logger.info("参数-限值：" + limitValueStr);
         logger.info("参数-发送号码：" + phone);
-        double limitValue = Double.parseDouble(limitValueStr);
+        double limitValue =  Double.parseDouble(limitValueStr);;
+
+
 
         //指标数据获取
         logger.info("变电站遥测刷新指标数据获取开始：");
