@@ -23,6 +23,14 @@ public abstract interface IndicatorDataDao{
      * @param idcValue  指标值
      * @param collectTime  采集时间
      */
-    void insertIndicatorData(@Param("idcID") int idcID,@Param("idcValue") float idcValue, @Param("collectTime") Date collectTime);
+    void insertIndicatorHisData(@Param("idcID") int idcID,@Param("idcValue") float idcValue, @Param("collectTime") Date collectTime);
 
+
+    /**
+     * 更新实时指标
+     * @param id 指标id
+     * @param idcValue 最近采集值
+     * @param collectTime  最近采集时间
+     */
+    void updateIndicatorRtData(@Param("id") int id,@Param("lastValue") float idcValue, @Param("lastTime") Date collectTime);
 }

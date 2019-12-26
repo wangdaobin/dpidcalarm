@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <properties>
-        <property name="schema" value="idcdb_1"/>
+        <property name="schema" value="idcdb"/>
     </properties>
     <settings>
         <!-- 使用驼峰命名法转换字段。 -->

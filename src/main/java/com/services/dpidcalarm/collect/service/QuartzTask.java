@@ -59,24 +59,28 @@ public class QuartzTask {
         long currentTime = System.currentTimeMillis();
 
 
+        try {
+            //指标数据获取
+            logger.info("变电站遥测刷新指标数据获取开始：");
+            CollectDataBDZYCSX collectDataBDZYCSX = new CollectDataBDZYCSX();
+            collectDataBDZYCSX.login(null,null,null);
+            String detailsHtml = collectDataBDZYCSX.getDetailsHtml(null,null,null,null);
+            logger.info("变电站遥测刷新指标数据：resultHTML：" + detailsHtml);
+            double scoreBDZYCSX =  collectDataBDZYCSX.getCurrentScore(detailsHtml);
+            logger.info("变电站遥测刷新指标得分：" + scoreBDZYCSX);
+            if(scoreBDZYCSX < limitValue && 1==sendFlag){
+                smsService.sendSms(phone, "变电站遥测刷新指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
+                logger.info("变电站遥测刷新指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr + "发送短息到" + phone);
+            }
+            //存储指标
+            indicatorDataDao.insertIndicatorHisData(1,(float)scoreBDZYCSX , new Date(currentTime));
+            //更新实时
+            indicatorDataDao.insertIndicatorHisData(1,(float)scoreBDZYCSX , new Date(currentTime));
 
-
-        //指标数据获取
-        logger.info("变电站遥测刷新指标数据获取开始：");
-        CollectDataBDZYCSX collectDataBDZYCSX = new CollectDataBDZYCSX();
-        collectDataBDZYCSX.login(null,null,null);
-        String detailsHtml = collectDataBDZYCSX.getDetailsHtml(null,null,null,null);
-        logger.info("变电站遥测刷新指标数据：resultHTML：" + detailsHtml);
-        double scoreBDZYCSX =  collectDataBDZYCSX.getCurrentScore(detailsHtml);
-        logger.info("变电站遥测刷新指标得分：" + scoreBDZYCSX);
-        if(scoreBDZYCSX < limitValue && 1==(sendFlag)){
-            smsService.sendSms(phone, "变电站遥测刷新指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
-            logger.info("变电站遥测刷新指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr + "发送短息到" + phone);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            e.getMessage();
         }
-
-        //存储指标
-        indicatorDataDao.insertIndicatorData(1,(float)scoreBDZYCSX , new Date(currentTime));
-
 
 
         logger.info("开关、遥测遥信、积分电量指标数据获取开始：");
@@ -98,63 +102,89 @@ public class QuartzTask {
         //url
         String scoreURL = "http://10.55.6.114/analysis/Daycord_j.gc";
         //公司
-        //
-        // String compony = "113715891329302534";
         String compony = "113715891329302535";
-        //*************2、开关指标得分*************//
-        //开关表名
-        String table_kg = "bk_con_cord_5";
         //开始日期为当前时期
         String currentDay = MyDateUtils.getCurrentDayStr();
-        String resultJSON = collectScoreByForm.getCurrentScoreJSON(scoreURL,compony,table_kg,currentDay);
-        // System.out.println("开关指标得分获取结果：resultJSON："+resultJSON);
-        logger.info("开关指标得分获取结果：resultJSON：" + resultJSON);
-        double scoreKGZB = collectScoreByForm.dealcurrentScoreJSON(resultJSON);
-        logger.info("开关指标得分：" + scoreKGZB);
-        if(scoreKGZB < limitValue && 1==sendFlag){
-            logger.info("开关指标得分" + scoreKGZB + "，小于限值" + limitValueStr + "发送短息到" + phone);
-            smsService.sendSms(phone, "开关指标得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
 
+
+        try {
+            //*************2、开关指标得分*************//
+            //开关表名
+            String table_kg = "bk_con_cord_5";
+            String resultJSON = collectScoreByForm.getCurrentScoreJSON(scoreURL,compony,table_kg,currentDay);
+            // System.out.println("开关指标得分获取结果：resultJSON："+resultJSON);
+            logger.info("开关指标得分获取结果：resultJSON：" + resultJSON);
+            double scoreKGZB = collectScoreByForm.dealcurrentScoreJSON(resultJSON);
+            logger.info("开关指标得分：" + scoreKGZB);
+            if(scoreKGZB < limitValue && 1==sendFlag){
+                logger.info("开关指标得分" + scoreKGZB + "，小于限值" + limitValueStr + "发送短息到" + phone);
+                smsService.sendSms(phone, "开关指标得分" + scoreKGZB + "，小于限值" + limitValueStr);
+
+            }
+
+            //存储历史指标
+            indicatorDataDao.insertIndicatorHisData(2,(float)scoreKGZB , new Date(currentTime));
+            //存储实时表
+            indicatorDataDao.updateIndicatorRtData(1,(float)scoreKGZB , new Date(currentTime));
+
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            e.getMessage();
         }
 
-        //存储指标
-        indicatorDataDao.insertIndicatorData(2,(float)scoreKGZB , new Date(currentTime));
 
 
-        //*************3、遥测遥信得分*************
-        //遥测遥信表名
-        String table_ycyx = "excDeviceCord";
-        //开始日期为当前时期
-        String resultJSON_ycyx = collectScoreByForm.getCurrentScoreJSON(scoreURL,compony,table_ycyx,currentDay);
-        // System.out.println("遥测遥信获取结果：resultJSON："+resultJSON_ycyx);
-        logger.info("遥测遥信获取结果：resultJSON：" + resultJSON_ycyx);
-        double scoreYCYX = collectScoreByForm.dealcurrentScoreJSON(resultJSON_ycyx);
-        logger.info("遥测遥信得分：" + scoreYCYX);
-        if(scoreYCYX < limitValue && 1 == sendFlag){
-            logger.info("遥测遥信得分" + scoreYCYX + "，小于限值" + limitValueStr + "发送短息到" + phone);
-            smsService.sendSms(phone, "遥测遥信得分" + scoreBDZYCSX + "，小于限值" + limitValueStr);
+        try {
+            //*************3、遥测遥信得分*************
+            //遥测遥信表名
+            String table_ycyx = "excDeviceCord";
+            //开始日期为当前时期
+            String resultJSON_ycyx = collectScoreByForm.getCurrentScoreJSON(scoreURL,compony,table_ycyx,currentDay);
+            // System.out.println("遥测遥信获取结果：resultJSON："+resultJSON_ycyx);
+            logger.info("遥测遥信获取结果：resultJSON：" + resultJSON_ycyx);
+            double scoreYCYX = collectScoreByForm.dealcurrentScoreJSON(resultJSON_ycyx);
+            logger.info("遥测遥信得分：" + scoreYCYX);
+            if(scoreYCYX < limitValue && 1 == sendFlag){
+                logger.info("遥测遥信得分" + scoreYCYX + "，小于限值" + limitValueStr + "发送短息到" + phone);
+                smsService.sendSms(phone, "遥测遥信得分" + scoreYCYX + "，小于限值" + limitValueStr);
 
+            }
+
+            //存储指标
+            indicatorDataDao.insertIndicatorHisData(3,(float)scoreYCYX , new Date(currentTime));
+            indicatorDataDao.updateIndicatorRtData(3,(float)scoreYCYX , new Date(currentTime));
+
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            e.getMessage();
         }
 
-        //存储指标
-        indicatorDataDao.insertIndicatorData(3,(float)scoreYCYX , new Date(currentTime));
 
-        //*************3、积分电量得分*************
-        String scoreURL_jfdl = "http://10.55.6.114/analysis/TmrJFMonthCord_j.gc";
-        String compony_jfdl = "南岸分公司";
-        //开始日期为当前时期
-        String yesterdayStr = MyDateUtils.getYesterdayDayStr();
-        String resultJSON_jfdl = collectScoreByForm.getCurrentScoreJSON(scoreURL_jfdl,compony_jfdl,null,yesterdayStr);
-        // System.out.println("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
-        logger.info("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
-        double scoreJFDL = collectScoreByForm.dealcurrentScoreJSON(resultJSON_jfdl);
-        logger.info("积分电量得分：" + scoreJFDL);
-        // if(scoreJFDL < limitValue && "1".equals(sendFlag)){
-        //     smsService.sendSms(phone, "积分电量的获取结果" + scoreJFDL + "，小于限值" + limitValueStr);
-        //     logger.info("积分电量的获取结果" + scoreYCYX + "，小于限值" + limitValueStr + "发送短息到" + phone);
-        // }
-        //存储指标
-        indicatorDataDao.insertIndicatorData(4,(float)scoreJFDL , new Date(currentTime));
+
+        try {
+            //*************3、积分电量得分*************
+            String scoreURL_jfdl = "http://10.55.6.114/analysis/TmrJFMonthCord_j.gc";
+            String compony_jfdl = "南岸分公司";
+            //开始日期为当前时期
+            String yesterdayStr = MyDateUtils.getYesterdayDayStr();
+            String resultJSON_jfdl = collectScoreByForm.getCurrentScoreJSON(scoreURL_jfdl,compony_jfdl,null,yesterdayStr);
+            // System.out.println("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
+            logger.info("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
+            double scoreJFDL = collectScoreByForm.dealcurrentScoreJSON(resultJSON_jfdl);
+            logger.info("积分电量得分：" + scoreJFDL);
+            // if(scoreJFDL < limitValue && "1".equals(sendFlag)){
+            //     smsService.sendSms(phone, "积分电量的获取结果" + scoreJFDL + "，小于限值" + limitValueStr);
+            //     logger.info("积分电量的获取结果" + scoreYCYX + "，小于限值" + limitValueStr + "发送短息到" + phone);
+            // }
+            //存储指标
+            indicatorDataDao.insertIndicatorHisData(4,(float)scoreJFDL , new Date(currentTime));
+            //更新实时
+            indicatorDataDao.updateIndicatorRtData(4,(float)scoreJFDL , new Date(currentTime));
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            e.getMessage();
+        }
+
 
 
 
