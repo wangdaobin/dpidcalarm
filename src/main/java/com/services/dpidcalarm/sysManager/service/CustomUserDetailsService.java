@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         UserBean user = this.userMapper.findUserByName(s);
         User userDetails = null;
         if(user != null){
-             userDetails = new User(user.getUserName(),user.getUserPasswd(),AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+             userDetails = new User(user.getName(),user.getPasswd(),AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
         }else{
             throw new UsernameNotFoundException("用户名不存在！");
         }

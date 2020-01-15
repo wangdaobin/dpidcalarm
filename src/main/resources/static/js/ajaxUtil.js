@@ -21,15 +21,14 @@ var ajaxUtil =  {
         ajaxPost:function(url, param){
             return new Promise((resolve, reject) => {
                 $.ajax({
-                    url: config.baseUrl+"/"+url,
+                    url: baseUrl+"/"+url,
                     type: "POST",
                     data: param,
                     success: (res) => {
-                        if(res.code){
-                            resolve(res)
-                        }else{
-                            reject(res.msg)
-                        }
+                        resolve(res)
+                    },
+                    error:(res) =>{
+                        reject(res);
                     }
                 })
             })
@@ -38,17 +37,16 @@ var ajaxUtil =  {
         ajaxQueryJson:function(url,param) {
             return new Promise((resolve, reject) => {
                 $.ajax({
-                    url: config.baseUrl + "/" + url,
+                    url: baseUrl+"/"+url,
                     type: "POST",
                     dataType: "json",
                     contentType: "application/json", // 指定这个协议很重要
                     data: param,
                     success: (res) => {
-                        if (res.code) {
-                            resolve(res.data)
-                        } else {
-                            reject(res.msg)
-                        }
+                        resolve(res)
+                    },
+                    error:(res) =>{
+                        reject(res);
                     }
                 })
             })

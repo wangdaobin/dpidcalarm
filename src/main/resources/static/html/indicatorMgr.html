@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>采集指标管理</title>
+    <link rel="stylesheet" type="text/css" href="../plugins/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element-ext.css">
+    <link rel="stylesheet" type="text/css" href="../css/indicatorMgr.css">
+</head>
+<body>
+    <div class="container" id="container">
+        <el-tabs type="border-card" style="height: calc(100% - 2px);position: relative">
+            <el-tab-pane label="类型维护">
+                <div class="condition-container" v-cloak>
+                    <el-button type="primary" style="float: right;margin-right: 10px" icon="el-icon-circle-plus" @click="addIndicatorInfo">添加</el-button>
+                </div>
+                <div class="table-container">
+                    <template>
+                        <el-table :data="tableData_indicator"
+                                  height="100%"
+                                  stripe border
+                                  style="width: 100%">
+                            <el-table-column
+                                    prop="code"
+                                    label="指标编码"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="指标名称"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="desc"
+                                    label="备注"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column label="操作" width="180px" align="center">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            type="primary"
+                                            size="mini"
+                                            @click="modifyIndicator(scope.$index, scope.row)">修改</el-button>
+                                    <el-button
+                                            type="primary"
+                                            size="mini"
+                                            @click="deleteIndicator(scope.$index, scope.row)">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="采集维护">
+                <div class="condition-container" v-cloak>
+                    <el-button type="primary" style="float: right;margin-right: 10px" icon="el-icon-circle-plus" @click="addIndicatorCollectInfo">添加</el-button>
+                </div>
+                <div class="table-container">
+                    <template>
+                        <el-table :data="tableData_indicatorAttr"
+                                  height="100%"
+                                  stripe border
+                                  style="width: 100%">
+                            <el-table-column
+                                    prop="idcName"
+                                    label="指标名称"
+                                    :show-overflow-tooltip='true'
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="loginAddr"
+                                    label="登录地址"
+                                    :show-overflow-tooltip='true'
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="loginName"
+                                    label="用户名"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="loginPassword"
+                                    label="密码"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="collectAddr"
+                                    :show-overflow-tooltip='true'
+                                    label="采集地址"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="collectType"
+                                    label="采集类型"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="collectCycle"
+                                    label="采集周期"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="param1"
+                                    label="参数1"
+                                    :show-overflow-tooltip='true'
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="param2"
+                                    label="参数2"
+                                    :show-overflow-tooltip='true'
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="param3"
+                                    label="参数3"
+                                    :show-overflow-tooltip='true'
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="param4"
+                                    label="参数4"
+                                    :show-overflow-tooltip='true'
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column label="操作" width="180px" align="center">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            type="primary"
+                                            size="mini"
+                                            @click="modifyIndicatorCollectInfo(scope.$index, scope.row)">修改</el-button>
+                                    <el-button
+                                            type="primary"
+                                            size="mini"
+                                            @click="deleteIndicatorCollectInfo(scope.$index, scope.row)">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </div>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+    <script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="../plugins/vue/vue.js"></script>
+    <script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+    <script type="text/javascript" src="../js/ajaxUtil.js"></script>
+    <script type="text/javascript" src="../js/indicatorMgr.js"></script>
+</body>
+</html>

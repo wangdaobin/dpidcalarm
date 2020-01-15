@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="../plugins/layui/css/layui.css">
     <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
     <link rel="stylesheet" type="text/css" href="../css/main.css">
 </head>
@@ -52,17 +53,20 @@
                     <hr style="height:1px;border:none;border-top:1px solid #555555;width: 90%;margin-left: 5%" />
                     <div class="panel-body">
                         <div style="margin-top: 15px">
-                            <span>姓名</span>
+                            <span>姓名:</span>
+                            <span v-cloak>{{userInfo.name}}</span>
                         </div>
                         <div style="margin-top: 15px">
-                            <span>权限</span>
+                            <span>角色:</span>
+                            <span v-cloak>{{userInfo.roleName}}</span>
                         </div>
                         <div style="margin-top: 15px">
-                            <span>手机</span>
+                            <span>手机:</span>
+                            <span v-cloak>{{userInfo.phone}}</span>
                         </div>
                         <div style="margin-top: 25px;text-align: center">
-                            <el-button type="info" icon="el-icon-edit-outline" plain>修改密码</el-button>
-                            <el-button type="info" icon="el-icon-star-off" plain>退出登录</el-button>
+                            <el-button type="info" icon="el-icon-edit-outline" plain @click="modifyPassword">修改密码</el-button>
+                            <el-button type="info" icon="el-icon-star-off" plain @click="logout">退出登录</el-button>
                         </div>
                     </div>
                 </div>
@@ -94,8 +98,10 @@
     </div>
 </div>
 <script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../plugins/layui/layui.js"></script>
 <script type="text/javascript" src="../plugins/vue/vue.js"></script>
 <script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+<script type="text/javascript" src="../js/ajaxUtil.js"></script>
 <script type="text/javascript" src="../js/main.js"></script>
 </body>
 </html>

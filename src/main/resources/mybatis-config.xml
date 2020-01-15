@@ -23,12 +23,14 @@
     </typeAliases>
     <mappers>
 
-       <mapper resource="mapping/UserMapper.xml"/>
+        <mapper resource="mapping/UserMapper.xml"/>
         <mapper resource="mapping/PropertiesConfigurationDao.xml"/>
         <mapper resource="mapping/SmSendLogDao.xml"/>
         <mapper resource="mapping/DataInfoDao.xml"/>
         <mapper resource="mapping/DataInfoErrorDao.xml"/>
         <mapper resource="mapping/IndicatorDataMapper.xml"/>
-
+        <mapper resource="mapping/DataQueryMapper.xml"/>
+        <mapper resource="mapping/IndicatorMgrMapper.xml"/>
+        <mapper resource="mapping/RoleMapper.xml"/>
     </mappers>
 </configuration>

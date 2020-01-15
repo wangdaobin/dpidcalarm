@@ -6,45 +6,46 @@ package com.services.dpidcalarm.sysManager.bean;
  * @Date 2019/11/17 0017 下午 18:50
  */
 public class UserBean {
-    private int userId;
-    private String userName;
-    private String userDesc;
-    private String userPasswd;
+    private int id;
+    private String name;
+    private String desc;
+    private String passwd;
     private int areaId;
     private int roleId;
-    private String userPhone;
-    private String userStatus;
+    private String roleName;
+    private String phone;
+    private String status;
 
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUserDesc() {
-        return userDesc;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setUserDesc(String userDesc) {
-        this.userDesc = userDesc;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    public String getUserPasswd() {
-        return userPasswd;
+    public String getPasswd() {
+        return passwd;
     }
 
-    public void setUserPasswd(String userPasswd) {
-        this.userPasswd = userPasswd;
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
     }
 
     public int getAreaId() {
@@ -63,19 +64,27 @@ public class UserBean {
         this.roleId = roleId;
     }
 
-    public String getUserPhone() {
-        return userPhone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getUserStatus() {
-        return userStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setUserStatus(String userStatus) {
-        this.userStatus = userStatus;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

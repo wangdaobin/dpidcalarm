@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.services.dpidcalarm.sysManager.dao.IndicatorMgrMapper" >
+    <select id="queryAllIndicator" resultType="com.services.dpidcalarm.sysManager.bean.Indicator">
+        select * from indicator_type
+    </select>
+    <select id="queryIndicatorAttr" resultType="com.services.dpidcalarm.sysManager.bean.IndicatorAttr">
+        select a.*,b.name idcName from indicator_attr a left join indicator_type b on a.idc_code=b.code
+    </select>
+</mapper>

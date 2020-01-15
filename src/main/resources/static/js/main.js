@@ -40,6 +40,7 @@ jQuery(document).ready(function() {
     $(".navigation-up li[_t_nav='home']").click(function (){
         vue.$data.selectedNav = 'home';
         vue.$data.breadcrumbList = ['首页'];
+        vue.$data.currentSrc = 'index.html';
     })
 });
 
@@ -48,6 +49,10 @@ var vue = new Vue({
     data: {
         selectedNav:'home',
         currentSrc:'index.html',
+        userInfo:{},
+        password_old:'',
+        password_new:'',
+        layerIndex:0,
         /* 导航标题 */
         nevigatelist: [{
             id: '1',
@@ -56,16 +61,12 @@ var vue = new Vue({
         }, {
             id: '2',
             nav: 'statisticData',
-            label: '采集数据统计'
+            label: '数据指标'
         }, {
             id: '3',
             nav: 'warning',
             label: '短信告警'
-        }, {
-                id: '4',
-                nav: 'personmgr',
-                label: '人事信息管理'
-            },{
+        },{
             id: '5',
             nav: 'sysManager',
             label: '系统管理'
@@ -73,9 +74,9 @@ var vue = new Vue({
         /* 导航内明细列表 */
         navdetails: [{
             id: 'statisticData',
-            p_name:'采集数据统计',
+            p_name:'数据指标',
             /* 明细列表左移距离 */
-            leftlength : '240px',
+            leftlength : '260px',
             /* 明细列表标题下内容 */
             childrenlist: [{
                 id: '1',
@@ -83,24 +84,24 @@ var vue = new Vue({
                 label: '',
                 /* 标题下内容列表 */
                 hreflist: [{
-                    label: '历史数据查询',
-                    href: 'historyData.html',
+                    label: '指标统计数据',
+                    href: 'indicator.html',
                 }]
-            }, {
+            },{
                 id: '2',
                 /* 列表标题 */
                 label: '',
                 /* 标题下内容列表 */
                 hreflist: [{
-                    label: '不合格率数据统计',
-                    href: 'collect_data_count.html',
-                } ]
+                    label: '历史数据查询',
+                    href: 'historyData_all.html',
+                }]
             }]
 
         },{
             id: 'warning',
             p_name:'短信告警',
-            leftlength : '360px',
+            leftlength : '390px',
             childrenlist: [{
                 id: '1',
                 /* 列表标题 */
@@ -121,26 +122,9 @@ var vue = new Vue({
                 } ]
             }
             ]
-        }, {
-
-            id:'personmgr',
-            leftlength : '600px',
-            p_name:'人事信息管理',
-            childrenlist : [
-                {
-                    id: '1',
-                    /* 列表标题 */
-                    label: '',
-                    /* 标题下内容列表 */
-                    hreflist: [{
-                        label: '人事信息',
-                        href: 'personinfoMgr.html'
-                    } ]
-                }
-            ]
         },{
             id:'sysManager',
-            leftlength : '650px',
+            leftlength : '520px',
             p_name:'系统管理',
             childrenlist : [
                 {
@@ -150,7 +134,7 @@ var vue = new Vue({
                     /* 标题下内容列表 */
                     hreflist: [{
                         label: '用户管理',
-                        href: '#'
+                        href: 'personInfoMgr.html'
                     } ]
                 },{
                     id: '2',
@@ -159,7 +143,7 @@ var vue = new Vue({
                     /* 标题下内容列表 */
                     hreflist: [{
                         label: '角色管理',
-                        href: '#'
+                        href: 'roleMgr.html'
                     } ]
                 },{
                     id: '3',
@@ -167,8 +151,8 @@ var vue = new Vue({
                     label: '',
                     /* 标题下内容列表 */
                     hreflist: [{
-                        label: '权限管理',
-                        href: 'http://www.baidu.com'
+                        label: '指标管理',
+                        href: 'indicatorMgr.html'
                     } ]
                 }
             ]
@@ -176,7 +160,7 @@ var vue = new Vue({
         breadcrumbList:['首页']
     },
     mounted: function() {
-
+        this.queryCurrentUser();
     },
     methods: {
         openPage(e){
@@ -193,6 +177,38 @@ var vue = new Vue({
                 this.breadcrumbList.push(menu_two_title);
             }
             this.breadcrumbList.push(target_name);
+        },
+        queryCurrentUser(){
+            let url = "user/queryCurrentUser";
+            let param = {};
+            ajaxUtil.ajaxQuery(url,param).then(res=>{
+                this.userInfo = res;
+            }).catch(err =>{
+                console.error(err);
+            })
+        },
+        logout(){
+            window.location.href="/dpidcalarm/logout";
+        },
+        modifyPassword(){
+            let this_ = this;
+            layui.use('layer', function(){
+                let layer = layui.layer;
+                this_.layerIndex = layer.open({
+                    type: 2,
+                    area: ['380px', '350px'],
+                    skin: 'layui-layer-rim', //加上边框
+                    title:"修改密码",
+                    content: "/dpidcalarm/html/modifyPassword.html" //这里content是一个普通的String
+                });
+            });
+        },
+        closeLayer(){
+            let this_ = this;
+            layui.use('layer', function() {
+                let layer = layui.layer;
+                layer.close(this_.layerIndex)
+            });
         }
     }
 });

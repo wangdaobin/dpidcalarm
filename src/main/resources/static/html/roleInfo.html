@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色信息</title>
+    <link rel="stylesheet" type="text/css" href="../plugins/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element-ext.css">
+    <link rel="stylesheet" type="text/css" href="../css/indicatorMgr.css">
+</head>
+<body>
+    <div id="container" class="container">
+        <!-- 人员信息 -->
+        <div class="add-role-info" id="userInfo">
+            <div style="height: 40px;font-weight: bold;font-size: 18px;text-align: center">角色信息</div>
+            <el-form label-position="right" label-width="80px">
+                <el-form-item label="角色名">
+                    <el-input v-model="roleInfo.name" style="width: 250px" placeholder="姓名"></el-input>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input v-model="roleInfo.desc" style="width: 250px" placeholder="备注"></el-input>
+                </el-form-item>
+                <el-form-item label="权限">
+                    <el-checkbox v-model="roleInfo.sysadm">系统管理权限</el-checkbox>
+                    <el-checkbox v-model="roleInfo.memadm">人员管理权限</el-checkbox>
+                    <el-checkbox v-model="roleInfo.collectadm">采集管理权限</el-checkbox>
+                    <el-checkbox v-model="roleInfo.alarmadm">告警管理权限</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submit">确定</el-button>
+                    <el-button @click="closeDialog">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </div>
+    <script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="../plugins/vue/vue.js"></script>
+    <script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+    <script type="text/javascript" src="../js/ajaxUtil.js"></script>
+    <script type="text/javascript" src="../js/roleInfo.js"></script>
+</body>
+</html>

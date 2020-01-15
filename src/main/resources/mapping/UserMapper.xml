@@ -2,10 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.services.dpidcalarm.sysManager.dao.UserMapper" >
     <select id="findAllUser" resultType="com.services.dpidcalarm.sysManager.bean.UserBean">
-        select * from user_info
+        select * from user
+    </select>
+    <select id="queryUsers" parameterType="String" resultType="com.services.dpidcalarm.sysManager.bean.UserBean">
+        select a.*,b.name roleName  from user a
+        left join role b on a.role_id=b.id
+        <if test="name != null and '' != name">
+            where a.name like '%${name}%'
+        </if>
     </select>
 
     <select id="findUserByName" resultType="com.services.dpidcalarm.sysManager.bean.UserBean">
-        select * from user_info where user_name = #{name}
+        select a.*,b.name roleName  from user a
+        left join role b on a.role_id=b.id
+        where a.name = #{name}
     </select>
+    
+    <update id="addUser" parameterType="com.services.dpidcalarm.sysManager.bean.UserBean">
+        insert into user (name,`desc`,passwd,area_id,role_id,phone,`status`)
+          values (#{user.name},#{user.desc},#{user.passwd},#{user.areaId},#{user.roleId},#{user.phone},#{user.status})
+    </update>
+
+    <update id="updateUser" parameterType="com.services.dpidcalarm.sysManager.bean.UserBean">
+        update user set name=#{user.name},`desc`=#{user.desc},passwd=#{user.passwd},area_id=#{user.areaId},role_id=#{user.roleId},
+        phone=#{user.phone},`status`=#{user.status} where id=#{user.id}
+    </update>
+    
+    <delete id="deleteUser" parameterType="int">
+        delete from user where id=#{userId}
+    </delete>
+    
+    <update id="modifyPassword">
+        update user set passwd=#{password_new} where name=#{userName}
+    </update>
 </mapper>

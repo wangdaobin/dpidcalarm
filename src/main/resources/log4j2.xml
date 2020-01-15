@@ -10,7 +10,7 @@
         <!--获取home路径${sys:catalina.base}-->
         <!--<Property name="LOG_HOME">${sys:catalina.base}/var/logs</Property>-->
         <Property name="fileName">idc.log</Property>
-        <Property name="backupFilePatch">${env:IDC_HOME}/log/</Property>
+        <Property name="backupFilePatch">log/</Property>
     </Properties>
     <!--先定义所有的appender-->
     <appenders>

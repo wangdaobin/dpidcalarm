@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>历史数据曲线</title>
+    <link rel="stylesheet" type="text/css" href="../plugins/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element-ext.css">
+    <link rel="stylesheet" type="text/css" href="../css/collect_data_count.css"/>
+</head>
+<body>
+    <div class="container" id="container">
+        <el-tabs type="border-card" style="height: calc(100% - 2px);position: relative">
+            <el-tab-pane label="状态估计合格率">
+                <iframe src="historyData.html?code='1006'&title='状态估计合格率'" height="100%" width="100%" scrolling="no" frameborder="0"></iframe>
+            </el-tab-pane>
+            <el-tab-pane label="变电站遥测刷新率" :lazy="true">
+                <iframe src="historyData.html?code='1001'&title='变电站遥测刷新率'" height="100%" width="100%" scrolling="no" frameborder="0"></iframe>
+            </el-tab-pane>
+            <el-tab-pane label="开关位置频繁变位情况" :lazy="true">
+                <iframe src="historyData.html?code='1002'&title='开关位置频繁变位情况'" height="100%" width="100%" scrolling="no" frameborder="0"></iframe>
+            </el-tab-pane>
+            <el-tab-pane label="遥测遥信状态不一致" :lazy="true">
+                <iframe src="historyData.html?code='1003'&title='遥测遥信状态不一致'" height="100%" width="100%" scrolling="no" frameborder="0"></iframe>
+            </el-tab-pane>
+            <el-tab-pane label="积分电量误差率" :lazy="true">
+                <iframe src="historyData.html?code='1004'&title='积分电量误差率'" height="100%" width="100%" scrolling="no" frameborder="0"></iframe>
+            </el-tab-pane>
+            <el-tab-pane label="事故分闸" :lazy="true">
+                <iframe src="historyData.html?code='1005'&title='事故分闸'" height="100%" width="100%" scrolling="no" frameborder="0"></iframe>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+    <script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="../plugins/vue/vue.js"></script>
+    <script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+    <script type="text/javascript" src="../js/historyData_all.js"></script>
+</body>
+</html>

@@ -2,7 +2,12 @@
 var echarts_year;
 var echarts_month;
 var echarts_day;
+var code;
+var title;
 jQuery(document).ready(function() {
+    //获取url参数
+    code= getUrlParam("code");
+    title= getUrlParam("title");
     //初始化日期控件
     layui.use('laydate', function(){
         let laydate = layui.laydate;
@@ -49,6 +54,12 @@ jQuery(document).ready(function() {
     echarts_month = initCharts("charts_month",xAxis_month);
     echarts_day = initCharts("charts_day",xAxis_day);
 });
+/*获取url中的参数*/
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    if (r != null) return unescape(r[2]); return null; //返回参数值
+}
 /*年份切换数据添加*/
 function addData_year(name) {
     //TODO 查询数据

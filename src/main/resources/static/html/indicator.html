@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>指标数据统计</title>
+    <link rel="stylesheet" type="text/css" href="../plugins/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element-ext.css">
+    <link rel="stylesheet" type="text/css" href="../css/collect_data_count.css"/>
+</head>
+<body>
+<div class="container" id="container">
+    <el-tabs type="border-card" style="height: calc(100% - 2px);position: relative">
+        <el-tab-pane label="状态估计合格率">
+            <div class="condition-container" v-cloak>
+                <label>时间:&nbsp;</label>
+                <el-date-picker v-model="date11" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+                </el-date-picker>
+                <label>&nbsp;至&nbsp;</label>
+                <el-date-picker v-model="date12" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+                </el-date-picker>
+                <el-button type="primary" style="margin-left: 30px" icon="el-icon-search" @click="querydata_ztgj">查询</el-button>
+            </div>
+            <div class="table-container">
+                <template>
+                    <el-table :data="tableData_ztgj" height="100%" stripe border style="width: 100%">
+                        <el-table-column prop="name" label="指标名称" align="center">
+                        </el-table-column>
+                        <el-table-column prop="value" label="指标值" width="200px" align="center">
+                        </el-table-column>
+                        <el-table-column prop="time" label="采集时间" align="center">
+                        </el-table-column>
+                        <el-table-column label="操作" width="180px" align="center">
+                            <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+
+            </div>
+            <div class="page-container">
+                <el-pagination
+                        background
+                        prev-text="上一页"
+                        next-text="下一页"
+                        :page-size="pageSize"
+                        :current-page="pageNum_ztgj"
+                        @current-change="current_change_ztgj"
+                        layout="total,prev, pager, next"
+                        :total="total_ztgj">
+                </el-pagination>
+            </div>
+        </el-tab-pane>
+        <el-tab-pane label="变电站遥测刷新率">
+            <div class="condition-container" v-cloak>
+                <label>时间:&nbsp;</label>
+                <el-date-picker v-model="date1" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+                </el-date-picker>
+                <label>&nbsp;至&nbsp;</label>
+                <el-date-picker v-model="date2" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+                </el-date-picker>
+                <el-button type="primary" style="margin-left: 30px" icon="el-icon-search" @click="querydata_bdz">查询</el-button>
+            </div>
+            <div class="table-container">
+                <template>
+                    <el-table :data="tableData_bdz" height="100%" stripe border style="width: 100%">
+                        <el-table-column prop="name" label="指标名称" align="center">
+                        </el-table-column>
+                        <el-table-column prop="value" label="指标值" width="200px" align="center">
+                        </el-table-column>
+                        <el-table-column prop="time" label="采集时间" align="center">
+                        </el-table-column>
+                        <el-table-column label="操作" width="180px" align="center">
+                            <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+
+            </div>
+            <div class="page-container">
+                <el-pagination
+                        background
+                        prev-text="上一页"
+                        next-text="下一页"
+                        :page-size="pageSize"
+                        :current-page="pageNum_bdz"
+                        @current-change="current_change_bdz"
+                        layout="total,prev, pager, next"
+                        :total="total_bdz">
+                </el-pagination>
+            </div>
+        </el-tab-pane>
+        <el-tab-pane label="开关位置频繁变位情况">
+            <div class="condition-container" v-cloak>
+                <label>时间:&nbsp;</label>
+                <el-date-picker
+                        v-model="date3"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
+                <label>&nbsp;至&nbsp;</label>
+                <el-date-picker
+                        v-model="date4"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
+                <el-button type="primary" style="margin-left: 30px" icon="el-icon-search" @click="querydata_kgbw">查询</el-button>
+            </div>
+            <div class="table-container">
+                <template>
+                    <el-table :data="tableData_kgbw" height="100%" stripe border style="width: 100%">
+                        <el-table-column prop="name" label="指标名称" align="center">
+                        </el-table-column>
+                        <el-table-column prop="value" label="指标值" width="200px" align="center">
+                        </el-table-column>
+                        <el-table-column prop="time" label="采集时间" align="center">
+                        </el-table-column>
+                        <el-table-column label="操作" width="180px" align="center">
+                            <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </div>
+            <div class="page-container">
+                <el-pagination
+                        background
+                        prev-text="上一页"
+                        next-text="下一页"
+                        :page-size="pageSize"
+                        :current-page="pageNum_kgbw"
+                        @current-change="current_change_kgbw"
+                        layout="total,prev, pager, next"
+                        :total="total_kgbw">
+                </el-pagination>
+            </div>
+        </el-tab-pane>
+        <el-tab-pane label="遥测遥信状态不一致">
+            <div class="condition-container" v-cloak>
+                <label>时间:&nbsp;</label>
+                <el-date-picker
+                        v-model="date5"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
+                <label>&nbsp;至&nbsp;</label>
+                <el-date-picker
+                        v-model="date6"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
+                <el-button type="primary" style="margin-left: 30px" icon="el-icon-search" @click="querydata_yxyc">查询</el-button>
+            </div>
+            <div class="table-container">
+                <template>
+                    <el-table :data="tableData_yxyc" height="100%" stripe border style="width: 100%">
+                        <el-table-column prop="name" label="指标名称" align="center">
+                        </el-table-column>
+                        <el-table-column prop="value" label="指标值" width="200px" align="center">
+                        </el-table-column>
+                        <el-table-column prop="time" label="采集时间" align="center">
+                        </el-table-column>
+                        <el-table-column label="操作" width="180px" align="center">
+                            <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </div>
+            <div class="page-container">
+                <el-pagination
+                        background
+                        prev-text="上一页"
+                        next-text="下一页"
+                        :page-size="pageSize"
+                        :current-page="pageNum_yxyc"
+                        @current-change="current_change_yxyc"
+                        layout="total,prev, pager, next"
+                        :total="total_yxyc">
+                </el-pagination>
+            </div>
+        </el-tab-pane>
+        <el-tab-pane label="积分电量误差率">
+            <div class="condition-container" v-cloak>
+                <label>时间:&nbsp;</label>
+                <el-date-picker
+                        v-model="date7"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
+                <label>&nbsp;至&nbsp;</label>
+                <el-date-picker
+                        v-model="date8"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
+                <el-button type="primary" style="margin-left: 30px" icon="el-icon-search" @click="querydata_jfdl">查询</el-button>
+            </div>
+            <div class="table-container">
+                <template>
+                    <el-table :data="tableData_jfdl" height="100%" stripe border style="width: 100%">
+                        <el-table-column prop="name" label="指标名称" align="center">
+                        </el-table-column>
+                        <el-table-column prop="value" label="指标值" width="200px" align="center">
+                        </el-table-column>
+                        <el-table-column prop="time" label="采集时间" align="center">
+                        </el-table-column>
+                        <el-table-column label="操作" width="180px" align="center">
+                            <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </div>
+            <div class="page-container">
+                <el-pagination
+                        background
+                        prev-text="上一页"
+                        next-text="下一页"
+                        :page-size="pageSize"
+                        :current-page="pageNum_jfdl"
+                        @current-change="current_change_jfdl"
+                        layout="total,prev, pager, next"
+                        :total="total_jfdl">
+                </el-pagination>
+            </div>
+        </el-tab-pane>
+        <el-tab-pane label="事故分闸">
+            <div class="condition-container" v-cloak>
+                <label>时间:&nbsp;</label>
+                <el-date-picker
+                        v-model="date9"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
+                <label>&nbsp;至&nbsp;</label>
+                <el-date-picker
+                        v-model="date10"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
+                <el-button type="primary" style="margin-left: 30px" icon="el-icon-search" @click="querydata_sgfz">查询</el-button>
+            </div>
+            <div class="table-container">
+                <template>
+                    <el-table :data="tableData_sgfz" height="100%" stripe border style="width: 100%">
+                        <el-table-column prop="name" label="指标名称" align="center">
+                        </el-table-column>
+                        <el-table-column prop="value" label="指标值" width="200px" align="center">
+                        </el-table-column>
+                        <el-table-column prop="time" label="采集时间" align="center">
+                        </el-table-column>
+                        <el-table-column label="操作" width="180px" align="center">
+                            <template slot-scope="scope">
+                                <el-button
+                                        type="primary"
+                                        size="mini"
+                                        @click="queryDetail(scope.$index, scope.row)">查看详情</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </div>
+            <div class="page-container">
+                <el-pagination
+                        background
+                        prev-text="上一页"
+                        next-text="下一页"
+                        :page-size="pageSize"
+                        :current-page="pageNum_sgfz"
+                        @current-change="current_change_sgfz"
+                        layout="total,prev, pager, next"
+                        :total="total_sgfz">
+                </el-pagination>
+            </div>
+        </el-tab-pane>
+    </el-tabs>
+    <div class="error-dev-count" id="dev_detail">
+    </div>
+</div>
+<script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../plugins/vue/vue.js"></script>
+<script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+<script type="text/javascript" src="../js/ajaxUtil.js"></script>
+<script type="text/javascript" src="../js/utils.js"></script>
+<script type="text/javascript" src="../js/indicator.js"></script>
+</body>
+</html>

@@ -23,7 +23,6 @@ h1,h2,h3,h4,h5,h6{font-size:100%;font-family:arial,'hiragino sans gb','microsoft
 
 /*视窗概念不同屏幕根据此视窗大小 进行放缩*/
 .viewport{
-
     width: 1920px;
     height: 969px;
     transform: scale(1);
@@ -31,7 +30,7 @@ h1,h2,h3,h4,h5,h6{font-size:100%;font-family:arial,'hiragino sans gb','microsoft
     transition: all 0.3s linear 0.1s;
     margin-left: 0;
     margin-top: 0;
-    position: relative;
+    position: absolute;
 }
 
 /*内容*/
@@ -91,13 +90,13 @@ h1,h2,h3,h4,h5,h6{font-size:100%;font-family:arial,'hiragino sans gb','microsoft
 .navigation-up .navigation-v3{margin-left:155px;float:left;_margin-left:10px}
 .navigation-up .navigation-v3 ul{float:left}
 .navigation-up .navigation-v3 li{float:left;font:normal 20px/79px "microsoft yahei";color:#fff}
-.navigation-up .navigation-v3 .nav-up-selected{background:#60c888}
+.navigation-up .navigation-v3 .nav-up-selected{background:#37aa9c}
 .navigation-up .navigation-v3 .nav-up-selected-inpage{background:#0fa081}
 .navigation-up .navigation-v3 li h2{font-weight:normal;padding:0;margin:0}
 .navigation-up .navigation-v3 li h2 a{padding:0 25px;color:#fff;display:inline-block;height:80px;font-family:"microsoft yahei"}
 
 .navigation-down{position:absolute;top:80px;left:0px;width:100%}
-.navigation-down .nav-down-menu{width:100%;margin:0;background:#60c889;position:absolute;top:0px}
+.navigation-down .nav-down-menu{width:100%;margin:0;background:#37aa9c;position:absolute;top:0px}
 .navigation-down .nav-down-menu .navigation-down-inner{margin:auto;width:1200px;position:relative}
 .navigation-down .nav-down-menu dl{float:left;margin:18px 80px 18px 0}
 .navigation-down .menu-1 dl{margin:20px 80px 25px 0}
@@ -157,5 +156,15 @@ h1,h2,h3,h4,h5,h6{font-size:100%;font-family:arial,'hiragino sans gb','microsoft
     font-weight: bold;
     color: #0fa081;
     cursor: text;
+}
+
+.modifyPassword{
+    position: relative;
+    display: none;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    opacity: 1;
 }
 

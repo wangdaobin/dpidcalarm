@@ -44,6 +44,12 @@ public class BrowerSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 设置登陆成功页
                 .defaultSuccessUrl("/html/main.html",true).permitAll()
                 .and()
+                // 开启logout功能，在使用WebSecurityConfigurerAdapter的时候默认开启
+                .logout().permitAll()
+                .logoutUrl("/logout")
+                //指定登出成功跳转页面。默认/login?logout。这里我们使用默认配置
+                .logoutSuccessUrl("/html/login.html")
+                .and()
                 .authorizeRequests()    // 定义哪些URL需要被保护、哪些不需要被保护
                 // 设置所有人都可以访问登录页面
                 .antMatchers("/css/**","/js/**","/images/**","/plugins/**").permitAll()
