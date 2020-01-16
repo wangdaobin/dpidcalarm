@@ -60,7 +60,7 @@ public class QuartzTask {
         long currentTime = System.currentTimeMillis();
 
 
-        /****单独合格率****/
+        /****6 单独合格率****/
 
         try {
             //指标数据获取
@@ -190,7 +190,7 @@ public class QuartzTask {
 
 
         try {
-            //*************3、积分电量得分  昨日的值*************
+            //*************4、积分电量得分  昨日的值*************
             String scoreURL_jfdl = "http://10.55.6.114/analysis/TmrJFMonthCord_j.gc";
             //String compony_jfdl = "南岸分公司";
             String compony_jfdl = "%e5%8d%97%e5%b2%b8%e5%88%86%e5%85%ac%e5%8f%b8";
@@ -209,6 +209,32 @@ public class QuartzTask {
             indicatorDataDao.insertIndicatorHisData(4,(float)scoreJFDL , new Date(currentTime));
             //更新实时
             indicatorDataDao.updateIndicatorRtData(4,(float)scoreJFDL , new Date(currentTime));
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            e.getMessage();
+        }
+
+
+        try {
+            //*************5、事故分闸得分*************
+            //url http://10.55.6.114/analysis/Daycord_j.gc
+            String table_sgfz = "sdcinfoCord";
+            //开始日期为当前时期
+            String resultJSON_sgfz = collectScoreByForm.getCurrentScoreJSON(scoreURL,compony,table_sgfz,currentDay);
+            // System.out.println("遥测遥信获取结果：resultJSON："+resultJSON_ycyx);
+            logger.info("事故分闸得分获取结果：resultJSON：" + resultJSON_sgfz);
+            double scoreSGFZ = collectScoreByForm.dealcurrentScoreJSON(resultJSON_sgfz);
+            logger.info("事故分闸得分：" + scoreSGFZ);
+            if(scoreSGFZ < limitValue && 1 == sendFlag){
+                logger.info("事故分闸得分" + scoreSGFZ + "，小于限值" + limitValueStr + "发送短息到" + phone);
+                smsService.sendSms(phone, "事故分闸得分" + scoreSGFZ + "，小于限值" + limitValueStr);
+
+            }
+
+            //存储指标
+            indicatorDataDao.insertIndicatorHisData(5,(float)scoreSGFZ , new Date(currentTime));
+            indicatorDataDao.updateIndicatorRtData(5,(float)scoreSGFZ , new Date(currentTime));
+
         }catch (Exception e){
             logger.error(e.getMessage());
             e.getMessage();
