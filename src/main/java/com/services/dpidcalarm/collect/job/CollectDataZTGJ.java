@@ -27,11 +27,11 @@ import java.sql.Timestamp;
 import java.util.*;
 
 /**
- * @Description：采集单独合格率
+ * @Description：采集状态估计合格率
  * @Author：zhangtao
  * @Date：2020/1/15 0015 9:21:11
  */
-public class CollectDataDDHGL {
+public class CollectDataZTGJ {
 
     //电站列表
     public static final List<String> stations = Arrays.asList(new String[] { "南湖站", "惠民站", "木洞站", "接龙站", "纳溪沟站", "安澜站", "鹿角站", "永隆站", "界石站", "五布站", "广阳站", "双河站", "姜家站", "苏家湾站", "东港站", "莲池站", "柳银站", "桥口坝站", "黄桷垭站", "回龙湾站", "百步梯站", "响水洞站", "阳光一百站", "弹子石站", "长生站", "海棠站", "花溪站", "峡口站", "迎龙站", "武堂站", "高峰寺站", "南彭站", "鱼洞站", "南坪站", "李家沱站", "土桥站", "天文站", "梓桐站", "丹桂站", "金竹站", "二塘站", "光国站", "天星寺站", "龙门浩站", "龙洲湾站", "柏子桥站", "书房站", "花红站", "白马山站", "金家岩站", "虎啸站", "四公里站", "鸡冠石站", "走马羊站" });
@@ -58,7 +58,7 @@ public class CollectDataDDHGL {
             post.setEntity(requestEntity);
             //执行登录请求
             HttpResponse response = client.execute(post);
-            this.logger.info("单独合格率登录结果：" + EntityUtils.toString(response.getEntity()));
+            this.logger.info("状态估计合格率登录结果：" + EntityUtils.toString(response.getEntity()));
             return true;
         }catch(Exception e){
             e.printStackTrace();
@@ -67,7 +67,7 @@ public class CollectDataDDHGL {
     }
 
     /**
-     * 获取获取单独合格率的结果
+     * 获取获取状态估计合格率的结果
      * @param url
      * @return
      * @throws IOException
@@ -85,15 +85,48 @@ public class CollectDataDDHGL {
         post.setEntity(requestEntity);
         //执行请求
         HttpResponse response = this.client.execute(post);
-        this.logger.info("单独合格率获取--原始结果：" + EntityUtils.toString(response.getEntity()));
-        //请求的返回值
-        InputStream is = response.getEntity().getContent();
-        //处理解析结果
-        result = SvgUtil.svgzHandler(is, "svg");
+        String svgResutl = EntityUtils.toString(response.getEntity());
+        this.logger.info("状态估计合格率获取--原始结果：" + svgResutl);
 
-        this.logger.info("单独合格率--整理结果：" + result);
+        return svgResutl;
+    }
 
-        return result;
+
+
+
+
+
+    /**
+     *
+     * @param svgResult
+     */
+    public float getResultZTGJ(String  svgResult) {
+        if(null==svgResult || "".equals(svgResult)) {
+            this.logger.info("获取的svgResult为空或者null，不处理：");
+            return -1;
+        }
+        //获取厂站合格率
+        float val = SvgUtil.getQulifyRateFloat(svgResult);
+        logger.info(new StringBuilder().append("南岸 状态估计合格率 val:-------").append(val).toString());
+        return val;
+    }
+
+
+    public void printZTGJError(){
+        //详细错误点数
+        String ersStr = this.getNananTestError();
+        List<ErrorResult> errorResultList = SvgUtil.getErrorResult(ersStr);
+
+        for (ErrorResult er1 : errorResultList) {
+            logger.info(
+                    new StringBuilder().append("错误点数详情：设备名称：")
+                            .append(er1.getSbName())
+                            .append(",估计值：")
+                            .append(er1.getGjValue())
+                            .append(",量测值：")
+                            .append(er1.getLcValue()).toString()
+            );
+        }
     }
 
     /**
@@ -110,71 +143,18 @@ public class CollectDataDDHGL {
             HttpEntity requestEntity = new StringEntity("%3Croot%3E%3CTableData+table_id%3D%272064%27+app_id%3D%27201100%27+HisDataType%3D%271081085952%27+col_name_list%3D%27dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase%27+sql%3D%22select+dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase+from+pas_allmeasure+where+descr+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+finish_num%3D%270%27+record_num%3D%270%27+value%3D%27%27+m_SQL%3D%22+f3+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+m_WhereFieldList_string%3D%22f3%22+m_FieldInfoVec_string%3D%220%2Cf0%2C1%2C-1%2C-1%2C-1%2C-1%3B1%2Cf1%2C2%2C-1%2C-1%2C-1%2C-1%3B2%2Cf2%2C4%2C-1%2C-1%2C-1%2C-1%3B3%2Cf3%2C5%2C-1%2C-1%2C-1%2C-1%3B4%2Cf4%2C6%2C-1%2C-1%2C-1%2C-1%3B5%2Cf5%2C7%2C-1%2C-1%2C-1%2C-1%3B6%2Cf6%2C8%2C-1%2C-1%2C-1%2C-1%3B7%2Cf7%2C9%2C-1%2C-1%2C-1%2C-1%3B8%2Cf8%2C12%2C-1%2C-1%2C-1%2C-1%3B9%2Cf9%2C10%2C-1%2C-1%2C-1%2C-1%22+m_StatusQueryVec_string%3D%22%22%2F%3E%3C%2Froot%3E");
             post.setEntity(requestEntity);
             HttpResponse response = this.client.execute(post);
+            String svgResutl = EntityUtils.toString(response.getEntity());
+            this.logger.info("getNananTestError状态估计合格率--结果1：" + svgResutl);
             InputStream is = response.getEntity().getContent();
             result = SvgUtil.svgzHandler(is, "svg");
-            this.logger.info("getNananTestError单独合格率--结果：" + result);
+            this.logger.info("getNananTestError状态估计合格率--结果2：" + result);
             return result;
         }catch (Exception e) {
-            this.logger.info("getNananTestError单独合格率--出错：" + e.getMessage());
+            this.logger.info("getNananTestError状态估计合格率--出错：" + e.getMessage());
             e.printStackTrace();
             return null;
         }
 
     }
 
-
-
-
-    /**
-     *
-     * @param svgResult
-     */
-    public float getResultDDHGL(String  svgResult) {
-        if(null==svgResult || "".equals(svgResult)) {
-            this.logger.info("获取的svgResult为空或者null，不处理：");
-            return -1;
-        }
-        //获取厂站合格率
-        Map<String,Float> qulifyRateMap = SvgUtil.getQulifyRate(svgResult);
-        if(qulifyRateMap.size()==0) {
-            logger.error("qulifyRateMap为空,单独合格率获取失败");
-            return -1;
-        }
-
-        //获得南岸的合格率，并打印
-        Float val = qulifyRateMap.get("南岸");
-        if (val == null) {
-            logger.error("南岸val为空,单独合格率获取失败");
-            return -1;
-        }else {
-            logger.info(new StringBuilder().append("南岸 单独合格率 val:-------").append(val).toString());
-            for(Map.Entry<String, Float> entry : qulifyRateMap.entrySet()){
-                String mapKey = entry.getKey();
-                Float mapValue = entry.getValue();
-                System.out.println(mapKey+":"+mapValue);
-                logger.info(new StringBuilder().append(mapKey + " 单独合格率 val:-------").append(mapValue).toString());
-            }
-        }
-
-
-
-
-        //详细错误点数
-        String ersStr = this.getNananTestError();
-        List<ErrorResult> errorResultList = SvgUtil.getErrorResult(ersStr);
-
-
-
-        for (ErrorResult er1 : errorResultList) {
-            logger.info(
-                    new StringBuilder().append("错误点数详情：设备名称：")
-                    .append(er1.getSbName())
-                    .append(",估计值：")
-                    .append(er1.getGjValue())
-                    .append(",量测值：")
-                    .append(er1.getLcValue()).toString()
-            );
-        }
-        return val;
-    }
 }
