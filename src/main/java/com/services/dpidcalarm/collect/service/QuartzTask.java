@@ -2,13 +2,10 @@ package com.services.dpidcalarm.collect.service;
 
 import com.services.dpidcalarm.collect.dao.IndicatorDataDao;
 import com.services.dpidcalarm.collect.job.CollectDataBDZYCSX;
-import com.services.dpidcalarm.collect.job.CollectDataDDHGL;
+import com.services.dpidcalarm.collect.job.CollectDataZTGJ;
 import com.services.dpidcalarm.collect.job.CollectScoreByForm;
 import com.services.dpidcalarm.sms.SmsService;
 import com.services.dpidcalarm.utils.MyDateUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,30 +57,7 @@ public class QuartzTask {
         long currentTime = System.currentTimeMillis();
 
 
-        /****单独合格率****/
 
-        try {
-            //指标数据获取
-            logger.info("单独合格率指标数据获取开始：");
-            CollectDataDDHGL collectData= new CollectDataDDHGL();
-            collectData.login(null,null,null);
-            String svgImage = collectData.getSvgImageForKHZB(null);
-            logger.info("单独合格率指标指标数据：svgImage：" + svgImage);
-            double scoreDDHGL =  collectData.getResultDDHGL(svgImage);
-            logger.info("单独合格率指标得分：" + scoreDDHGL);
-            if(scoreDDHGL < limitValue && 1==sendFlag){
-                smsService.sendSms(phone, "单独合格率指标得分" + scoreDDHGL + "，小于限值" + limitValueStr);
-                logger.info("单独合格率指标得分" + scoreDDHGL + "，小于限值" + limitValueStr + "发送短息到" + phone);
-            }
-            //存储指标
-            indicatorDataDao.insertIndicatorHisData(6,(float)scoreDDHGL , new Date(currentTime));
-            //更新实时
-            indicatorDataDao.insertIndicatorHisData(6,(float)scoreDDHGL , new Date(currentTime));
-
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            e.getMessage();
-        }
 
         /**变电站遥测刷新指标**/
 
@@ -103,7 +77,7 @@ public class QuartzTask {
             //存储指标
             indicatorDataDao.insertIndicatorHisData(1,(float)scoreBDZYCSX , new Date(currentTime));
             //更新实时
-            indicatorDataDao.insertIndicatorHisData(1,(float)scoreBDZYCSX , new Date(currentTime));
+            indicatorDataDao.updateIndicatorRtData(1,(float)scoreBDZYCSX , new Date(currentTime));
 
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -183,14 +157,14 @@ public class QuartzTask {
             indicatorDataDao.updateIndicatorRtData(3,(float)scoreYCYX , new Date(currentTime));
 
         }catch (Exception e){
-            logger.error(e.getMessage());
+            logger.error("遥测遥信出错" + e.getMessage());
             e.getMessage();
         }
 
 
 
         try {
-            //*************3、积分电量得分  昨日的值*************
+            //*************4、积分电量得分  昨日的值*************
             String scoreURL_jfdl = "http://10.55.6.114/analysis/TmrJFMonthCord_j.gc";
             //String compony_jfdl = "南岸分公司";
             String compony_jfdl = "%e5%8d%97%e5%b2%b8%e5%88%86%e5%85%ac%e5%8f%b8";
@@ -210,11 +184,59 @@ public class QuartzTask {
             //更新实时
             indicatorDataDao.updateIndicatorRtData(4,(float)scoreJFDL , new Date(currentTime));
         }catch (Exception e){
-            logger.error(e.getMessage());
+            logger.error("积分电量出错" + e.getMessage());
             e.getMessage();
         }
 
 
+        try {
+            //*************5、事故分闸得分*************
+            //url http://10.55.6.114/analysis/Daycord_j.gc
+            String table_sgfz = "sdcinfoCord";
+            //开始日期为当前时期
+            String resultJSON_sgfz = collectScoreByForm.getCurrentScoreJSON(scoreURL,compony,table_sgfz,currentDay);
+            logger.info("事故分闸得分获取结果：resultJSON：" + resultJSON_sgfz);
+            double scoreSGFZ = collectScoreByForm.dealcurrentScoreJSON(resultJSON_sgfz);
+            logger.info("事故分闸得分：" + scoreSGFZ);
+            if(scoreSGFZ < limitValue && 1 == sendFlag){
+                logger.info("事故分闸得分" + scoreSGFZ + "，小于限值" + limitValueStr + "发送短息到" + phone);
+                smsService.sendSms(phone, "事故分闸得分" + scoreSGFZ + "，小于限值" + limitValueStr);
+
+            }
+
+            //存储指标
+            indicatorDataDao.insertIndicatorHisData(5,(float)scoreSGFZ , new Date(currentTime));
+            indicatorDataDao.updateIndicatorRtData(5,(float)scoreSGFZ , new Date(currentTime));
+
+        }catch (Exception e){
+            logger.error("事故分闸出错" + e.getMessage());
+            e.getMessage();
+        }
+
+        /****6 状态估计合格率****/
+
+        try {
+            //指标数据获取
+            logger.info("状态估计合格率指标数据获取开始：");
+            CollectDataZTGJ collectData= new CollectDataZTGJ();
+            collectData.login(null,null,null);
+            String svgImage = collectData.getSvgImageForKHZB(null);
+            logger.info("状态估计合格率指标指标数据：svgImage：" + svgImage);
+            double scoreZTGJ =  collectData.getResultZTGJ(svgImage);
+            logger.info("状态估计合格率指标得分：" + scoreZTGJ);
+            if(scoreZTGJ < limitValue && 1==sendFlag){
+                smsService.sendSms(phone, "状态估计合格率指标得分" + scoreZTGJ + "，小于限值" + limitValueStr);
+                logger.info("状态估计合格率指标得分" + scoreZTGJ + "，小于限值" + limitValueStr + "发送短息到" + phone);
+            }
+            //存储指标
+            indicatorDataDao.insertIndicatorHisData(6,(float)scoreZTGJ , new Date(currentTime));
+            //更新实时
+            indicatorDataDao.insertIndicatorHisData(6,(float)scoreZTGJ , new Date(currentTime));
+
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            e.getMessage();
+        }
 
 
     }

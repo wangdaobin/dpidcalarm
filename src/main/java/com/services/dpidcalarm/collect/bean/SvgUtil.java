@@ -127,7 +127,21 @@ public class SvgUtil
         getCZQulifyRateByReg("南岸", svg, "(@南岸@\\d+@\\d+\\.?\\d+@(\\d+\\.?\\d+))", stationMap);
         return stationMap;
     }
-
+    public static float getQulifyRateFloat(String svg) {
+        try{
+            String reg = ".*@南岸@\\d+@(\\d+\\.?\\d+)@.*";
+            Pattern pattern = Pattern.compile(reg);
+            Matcher matcher = pattern.matcher(svg);
+            String temp = null;
+            if (matcher.find()) {
+                temp = matcher.group(1);
+                return Float.valueOf(temp);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  -1;
+    }
     /**
      * 获得厂站合格率
      * @param cz
@@ -144,6 +158,8 @@ public class SvgUtil
         }
         stationMap.put(cz, temp == null ? null : Float.valueOf(temp));
     }
+
+
 
     public static List<ErrorResult> getErrorResult(String str)
     {
