@@ -47,4 +47,6 @@ public interface UserMapper {
     int modifyPassword(@Param("userName") String userName, @Param("password_new")String password_new);
 
     List<UserBean> queryUsers(String name);
+
+    List<UserBean> queryAllUsers();
 }

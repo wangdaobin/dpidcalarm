@@ -23,6 +23,20 @@ new Vue({
 
     },
     methods:{
+        /*查询用户*/
+        queryUsers(){
+            let url = 'user/queryAllUsers';
+            let param = {
+            };
+            ajaxUtil.ajaxQuery(url,param).then(res=>{
+                tableData_users = res;
+            }).catch(err =>{
+                console.error(err);
+            })
+        },
+        /*提交*/
+        onSubmit(){
 
+        }
     }
 });

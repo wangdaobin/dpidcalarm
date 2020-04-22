@@ -3,6 +3,7 @@ package com.services.dpidcalarm.sysManager.controller;
 import com.github.pagehelper.PageInfo;
 import com.services.dpidcalarm.sysManager.bean.UserBean;
 import com.services.dpidcalarm.sysManager.service.UserService;
+import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * @Description 用户管理控制层
@@ -55,7 +57,11 @@ public class UserMgrController {
     public PageInfo<UserBean> queryUsers(String userName,int pageNum, int pageSize){
         return this.userService.queryUsers(userName,pageNum,pageSize);
     }
-
+    @RequestMapping("queryAllUsers")
+    @ResponseBody
+    public List<UserBean> queryAllUsers(){
+        return this.userService.queryAllUsers();
+    }
     @RequestMapping("deleteUser")
     @ResponseBody
     public int deleteUser(int userId){

@@ -7,6 +7,7 @@ import com.services.dpidcalarm.dataquery.dao.DataQureyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,5 +28,11 @@ public class DataQueryService {
         PageHelper.startPage(pageNum,pageSize);
         List<IndicatorHisData> list = this.dataQureyMapper.queryHisData(type,begin,end);
         return new PageInfo<IndicatorHisData>(list);
+    }
+
+    public PageInfo<HashMap<String,String>> queryDetail(String tableName,String indicatorDataid,int pageNum,int pageSize){
+        PageHelper.startPage(pageNum,pageSize);
+        List<HashMap<String,String>> list = this.dataQureyMapper.queryDetail(tableName,indicatorDataid);
+        return new PageInfo<HashMap<String,String>>(list);
     }
 }

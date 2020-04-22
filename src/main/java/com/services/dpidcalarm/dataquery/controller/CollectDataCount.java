@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -60,6 +61,30 @@ public class CollectDataCount {
     public PageInfo<IndicatorHisData> queryIndicatorHisData(String start, String end, int type, int pageNum, int pageSize){
         try{
             return this.dataQueryService.queryHisData(type,start,end,pageNum,pageSize);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+    @RequestMapping("queryIndicatorDetail")
+    @ResponseBody
+    public PageInfo<HashMap<String,String>> queryIndicatorDetail(int type,String idpId,int pageNum,int pageSize){
+        try{
+            String tableName = "";
+            if(1001 == type){
+                tableName = "indicator_details_bdzycsx";
+            }else if(1002 == type){
+                tableName = "indicator_details_kgbw";
+            }else if(1003 == type){
+                tableName = "indicator_details_ycyxztbyz";
+            }else if(1004 == type){
+                tableName = "indicator_detailsj_jfdlwc_dydj";
+            }else if(1005 == type){
+                tableName = "indicator_details_sgfz";
+            }else if(1006 == type){
+                tableName = "indicator_details_ztgj";
+            }
+            return this.dataQueryService.queryDetail(tableName,idpId,pageNum,pageSize);
         }catch (Exception e){
             e.printStackTrace();
             return null;

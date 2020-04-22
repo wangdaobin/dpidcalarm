@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,4 +31,11 @@ public interface DataQureyMapper {
      * @return
      */
     List<IndicatorHisData> queryHisData(@Param("type") int type, @Param("begin") String begin, @Param("end") String end);
+
+    /**
+     * 从指定表中查询指标详细数据，以键值对返回
+     * @param tableName
+     * @return
+     */
+    List<HashMap<String,String>> queryDetail(@Param("tableName") String tableName,@Param("indicatorDataid") String indicatorDataid);
 }

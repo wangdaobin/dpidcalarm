@@ -1,0 +1,28 @@
+/*详情页样式*/
+html,body{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+.container{
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+}
+.table-container{
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: calc(100% - 45px);
+}
+.page-container{
+    position: relative;
+    box-sizing: border-box;
+    height: 45px;
+    line-height: 45px;
+    width: 100%;
+    text-align: center;
+}

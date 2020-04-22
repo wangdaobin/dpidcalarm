@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashMap;
 import java.util.List;
 
 @SpringBootTest
@@ -32,6 +33,14 @@ class DpidcalarmApplicationTests {
     void testQueryHisData(){
         PageInfo<IndicatorHisData> list = this.dataQueryService.queryHisData(1001,"2019-12-15 19:00:00","2019-12-15 20:00:00",1,10);
         for(IndicatorHisData data : list.getList()){
+            System.out.println(data);
+        }
+    }
+
+    @Test
+    void testQueryDetail(){
+        PageInfo<HashMap<String,String>> list = this.dataQueryService.queryDetail("indicator_details_ztgj","1",1,10);
+        for(HashMap data : list.getList()){
             System.out.println(data);
         }
     }

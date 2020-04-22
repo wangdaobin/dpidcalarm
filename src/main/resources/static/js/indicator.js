@@ -181,17 +181,18 @@ new Vue({
         /*导出单独合格率表*/
         download_single(){
         },
-        queryDetail(index,row){
+        queryDetail(index,row,type){
+           let idpId = row.id;
+           let pageName = "indicator_detail_"+type;
             let this_ = this;
-            //TODO 查询数据
             layui.use('layer', function(){
                 let layer = layui.layer;
                 layer.open({
-                    type: 1,
-                    area: ['700px', '600px'],
+                    type: 2,
+                    area: ['900px', '600px'],
                     skin: 'layui-layer-rim', //加上边框
                     title:"查看详情",
-                    content: $('#dev_detail') //这里content是一个普通的String
+                    content: `../html/`+pageName+`.html?idpId=`+idpId+`&type=`+row.type, //这里content是一个普通的String
                 });
             });
         }

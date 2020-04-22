@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>积分电量</title>
+    <link rel="stylesheet" type="text/css" href="../css/indicator_detail.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element-ext.css">
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="table-container">
+            <template>
+                <el-table :data="tableData" height="100%" stripe border style="width: 100%">
+                    <el-table-column prop="dydj_name" label="电压等级" align="center">
+                    </el-table-column>
+                    <el-table-column prop="pc_num" label="偏差数" width="200px" align="center">
+                    </el-table-column>
+                    <el-table-column prop="total_num" label="总数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="zql" label="正确率" align="center">
+                    </el-table-column>
+                </el-table>
+            </template>
+        </div>
+        <div class="page-container">
+            <el-pagination
+                    background
+                    prev-text="上一页"
+                    next-text="下一页"
+                    :page-size="pageSize"
+                    :current-page="pageNum"
+                    @current-change="current_change"
+                    layout="total,prev, pager, next"
+                    :total="total">
+            </el-pagination>
+        </div>
+    </div>
+    <script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../plugins/vue/vue.js"></script>
+    <script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+    <script type="text/javascript" src="../js/ajaxUtil.js"></script>
+    <script type="text/javascript" src="../js/indicator_detail.js"></script>
+</body>
+</html>

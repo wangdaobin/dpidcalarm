@@ -11,6 +11,10 @@
             where a.name like '%${name}%'
         </if>
     </select>
+    <select id="queryAllUsers" resultType="com.services.dpidcalarm.sysManager.bean.UserBean">
+        select a.*,b.name roleName  from user a
+        left join role b on a.role_id=b.id
+    </select>
 
     <select id="findUserByName" resultType="com.services.dpidcalarm.sysManager.bean.UserBean">
         select a.*,b.name roleName  from user a

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>开关变位详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/indicator_detail.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
+    <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element-ext.css">
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="table-container">
+            <template>
+                <el-table :data="tableData" height="100%" stripe border style="width: 100%">
+                    <el-table-column prop="parent_area_name" label="父区域" align="center">
+                    </el-table-column>
+                    <el-table-column prop="area_name" label="区域" align="center">
+                    </el-table-column>
+                    <el-table-column prop="station_num" label="厂站数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="area_hgl" label="地区合格率" align="center">
+                    </el-table-column>
+                    <el-table-column prop="yc_num" label="遥测总数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="yc_hg_num" label="遥测合格数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="cwyx_num" label="错误遥信数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="dy_num" label="电压总数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="dy_hg_num" label="电压合格数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="xl_num" label="线路总数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="xl_hg_num" label="线路合格数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="byq_num" label="变压器总数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="byq_hg_num" label="变压器合格数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="fhyc_num" label="负荷遥测总数" align="center">
+                    </el-table-column>
+                    <el-table-column prop="fhyc_hg_num" label="负荷遥测合格数" align="center">
+                    </el-table-column>
+                </el-table>
+            </template>
+        </div>
+        <div class="page-container">
+            <el-pagination
+                    background
+                    prev-text="上一页"
+                    next-text="下一页"
+                    :page-size="pageSize"
+                    :current-page="pageNum"
+                    @current-change="current_change"
+                    layout="total,prev, pager, next"
+                    :total="total">
+            </el-pagination>
+        </div>
+    </div>
+    <script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../plugins/vue/vue.js"></script>
+    <script type="text/javascript" src="../plugins/vue/element/element.js"></script>
+    <script type="text/javascript" src="../js/ajaxUtil.js"></script>
+    <script type="text/javascript" src="../js/indicator_detail.js"></script>
+</body>
+</html>

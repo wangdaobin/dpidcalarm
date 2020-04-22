@@ -45,4 +45,8 @@ public class UserService {
     public int modifyUser(UserBean userInfo) {
         return this.userMapper.updateUser(userInfo);
     }
+
+    public List<UserBean> queryAllUsers() {
+        return this.userMapper.queryAllUsers();
+    }
 }
