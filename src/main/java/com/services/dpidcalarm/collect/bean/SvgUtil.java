@@ -127,9 +127,9 @@ public class SvgUtil
         getCZQulifyRateByReg("南岸", svg, "(@南岸@\\d+@\\d+\\.?\\d+@(\\d+\\.?\\d+))", stationMap);
         return stationMap;
     }
-    public static float getQulifyRateFloat(String svg) {
+    public static float getQulifyRateFloat(String svg,String comShortName) {
         try{
-            String reg = ".*@南岸@\\d+@(\\d+\\.?\\d+)@.*";
+            String reg = ".*@" + comShortName + "@\\d+@(\\d+\\.?\\d+)@.*";
             Pattern pattern = Pattern.compile(reg);
             Matcher matcher = pattern.matcher(svg);
             String temp = null;

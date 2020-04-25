@@ -1,12 +1,15 @@
 package com.services.dpidcalarm.collect.dao;
 
 import com.services.dpidcalarm.base.bean.MyMapper;
+import com.services.dpidcalarm.collect.bean.IndicatorData;
 import com.services.dpidcalarm.datainfo.bean.DataInfo;
+import com.services.dpidcalarm.sysManager.bean.Indicator;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description：
@@ -17,13 +20,13 @@ import java.util.Date;
 @Mapper
 public abstract interface IndicatorDataDao{
 
+
     /**
-     * 存储指标数据
-     * @param idcID  指标id
-     * @param idcValue  指标值
-     * @param collectTime  采集时间
+     * 插入指标得分历史数据
+     * @param indicatorData 指标对象
+     * @return
      */
-    void insertIndicatorHisData(@Param("idcID") int idcID,@Param("idcValue") float idcValue, @Param("collectTime") Date collectTime);
+    Integer insertIndicatorHisData(IndicatorData indicatorData);
 
 
     /**
@@ -32,5 +35,30 @@ public abstract interface IndicatorDataDao{
      * @param idcValue 最近采集值
      * @param collectTime  最近采集时间
      */
-    void updateIndicatorRtData(@Param("id") int id,@Param("lastValue") float idcValue, @Param("lastTime") Date collectTime);
+    Integer updateIndicatorRtData(@Param("id") int id,@Param("lastValue") float idcValue, @Param("lastTime") Date collectTime);
+
+
+    /**
+     * 更新实时指标-短信发送次数
+     * @param id
+     * @param sendMsgCount
+     * @return
+     */
+    Integer updateIndicatorMsgSendCount(@Param("id") int id,@Param("sendMsgCount") int sendMsgCount);
+
+    /**
+     * 查询全部指标
+     * @return
+     */
+    public List<Indicator> queryAllIndicator();
+    /**
+     * 插入指标得分对应的详情
+     * @param indicatorDataId
+     * @param stationName
+     * @param problemCount
+     * @param deductPoints
+     * @return
+     */
+    Integer insertBDZYCSXDetailData(@Param("indicatorDataId") int indicatorDataId,
+                                    @Param("stationName") String stationName, @Param("problemCount") int problemCount,@Param("deductPoints") float deductPoints);
 }

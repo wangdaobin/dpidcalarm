@@ -1,5 +1,7 @@
 package com.services.dpidcalarm.collect.job;
 
+import com.services.dpidcalarm.collect.bean.BDZYCSXDetails;
+import com.services.dpidcalarm.collect.bean.BDZYCSXScore;
 import com.services.dpidcalarm.utils.ErrorCountHtmlUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -27,9 +29,6 @@ import java.util.Map;
 public class CollectDataBDZYCSX
 {
     private Logger logger = LoggerFactory.getLogger(CollectDataBDZYCSX.class);
-    private static final String ROOT_URL = "http://10.55.6.114";
-    private static final String LOGIN_URL = "/Loginout.gc";
-    private static final String ERROR_COUNT_URL = "/check/WarnReport_WarnReport.gc?tableType=city&field=南岸&dataType=day&dianshu=5";
     //客户端句柄
     private CloseableHttpClient client = null;
 
@@ -72,7 +71,8 @@ public class CollectDataBDZYCSX
      */
     public String getDetailsHtml(String url, String param1, String param2, String param3 ) {
         try{
-            HttpGet get = new HttpGet("http://10.55.6.114/check/WarnReport_WarnReport.gc?tableType=city&field=南岸&dataType=day&dianshu=5");
+            //String url = "http://10.55.6.114/check/WarnReport_WarnReport.gc?tableType=city&field=南岸&dataType=day&dianshu=5";
+            HttpGet get = new HttpGet("http://10.55.6.114/check/WarnReport_WarnReport.gc?tableType=city&field=" + param1 +"&dataType=day&dianshu=5");
             return EntityUtils.toString(this.client.execute(get).getEntity());
         }catch (Exception e){
             e.printStackTrace();
@@ -85,21 +85,41 @@ public class CollectDataBDZYCSX
 
     }
 
-    public double getCurrentScore(String detailsHtml){
+    public BDZYCSXScore getCurrentBDZYCSXScore(String detailsHtml){
+        BDZYCSXScore bdzycsxScore = new BDZYCSXScore();
         //1、解析html，解析
         Map<String, String> resultMap =  ErrorCountHtmlUtils.getCountMap(detailsHtml);
         //key:重庆.长寿.涪陵.桥南站    value:34;0.09
         if(resultMap.size()==0){
             //没有问题，100分
-            return 100;
+            bdzycsxScore.setScore(100);
+            return bdzycsxScore;
         }
         double currentScore = 100.0;
-        for (String value : resultMap.values()){
+        for (Map.Entry<String, String> entry : resultMap.entrySet()) {
+
+            //值
+            String value = entry.getValue();
+            //问题点数
+            String problemCoun = value.split(";")[0];
+            //扣分数
             String scoreStr = value.split(";")[1];
             double tempScore = Double.parseDouble(scoreStr);
+            //当前得分
             currentScore = currentScore - tempScore;
-
+            if(tempScore>0){
+                //有扣分需要记录扣分情况
+                BDZYCSXDetails details = new BDZYCSXDetails();
+                details.setStationName( entry.getKey());
+                details.setProblemCount(Integer.parseInt(problemCoun));
+                details.setDeductPoint((float)tempScore);
+                //加入详情队列
+                bdzycsxScore.getDetailsList().add(details);
+            }
         }
-        return currentScore ;
+
+        //设置当前得分，并返回详情对象
+        bdzycsxScore.setScore(currentScore);
+        return bdzycsxScore ;
     }
 }

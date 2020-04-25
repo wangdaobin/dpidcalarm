@@ -35,7 +35,7 @@ public class QuartzConfiguration {
         jobDetail.setConcurrent(false);
 
         // 设置任务的名字
-        jobDetail.setName("reptilianJob");
+        jobDetail.setName("reptilianJob1");
 
         // 设置任务的分组，在多任务的时候使用
         jobDetail.setGroup("reptilianJobGroup");
@@ -58,13 +58,16 @@ public class QuartzConfiguration {
      */
     @Bean(name = "jobTrigger")
     public CronTriggerFactoryBean cronJobTrigger(JobDetail reptilianJob){
+
         CronTriggerFactoryBean tigger = new CronTriggerFactoryBean();
 
         tigger.setJobDetail(reptilianJob);
 
-        //cron表达式，每整钟执行一次
+        //cron表达式，每整5分钟执行一次
         tigger.setCronExpression("0 0/5 * * * ? ");
-        // tigger.setCronExpression("*/5 * * * * ?");
+
+        //cron表达式，每整5秒执行一次
+        //tigger.setCronExpression("*/5 * * * * ?");
         logger.info("cron表达式，每整5钟执行一次");
         tigger.setName("reptilianTrigger");
         return tigger;

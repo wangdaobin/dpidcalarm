@@ -2,12 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.services.dpidcalarm.collect.dao.IndicatorDataDao">
 
-    <insert id="insertIndicatorHisData" >
+    <!--插入历史指标-->
+    <insert id="insertIndicatorHisData" useGeneratedKeys="true" keyProperty="id" parameterType="com.services.dpidcalarm.collect.bean.IndicatorData" >
       insert into ${schema}.indicator_data (idc_id,idc_value,collect_time) values (#{idcID},#{idcValue},#{collectTime});
     </insert>
+    <!--更新实时指标-->
     <update id="updateIndicatorRtData" >
       update  ${schema}.indicator
       set last_value=#{lastValue},last_time=#{lastTime}
       where id=#{id};
     </update>
+    <!--更新实时指标-短信发送次数-->
+    <update id="updateIndicatorMsgSendCount" >
+      update  ${schema}.indicator
+      set send_msg_count=#{sendMsgCount}
+      where id=#{id};
+    </update>
+
+    <!--查询指标信息-->
+    <select id="queryAllIndicator" resultType="com.services.dpidcalarm.sysManager.bean.Indicator">
+        select * from indicator
+    </select>
+
+    <!-- 变电站遥测刷新详情插入-->
+    <insert id="insertBDZYCSXDetailData" >
+      insert into ${schema}.indicator_details_bdzycsx (indicator_data_id,station_name,problem_count,deduct_points)
+       values (#{indicatorDataId},#{stationName},#{problemCount},#{deductPoints});
+    </insert>
 </mapper>

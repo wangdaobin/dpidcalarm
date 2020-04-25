@@ -100,13 +100,13 @@ public class CollectDataZTGJ {
      *
      * @param svgResult
      */
-    public float getResultZTGJ(String  svgResult) {
+    public float getResultZTGJ(String  svgResult, String comShortName) {
         if(null==svgResult || "".equals(svgResult)) {
             this.logger.info("获取的svgResult为空或者null，不处理：");
             return -1;
         }
         //获取厂站合格率
-        float val = SvgUtil.getQulifyRateFloat(svgResult);
+        float val = SvgUtil.getQulifyRateFloat(svgResult,comShortName);
         logger.info(new StringBuilder().append("南岸 状态估计合格率 val:-------").append(val).toString());
         return val;
     }
