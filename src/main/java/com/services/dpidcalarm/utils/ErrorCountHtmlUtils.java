@@ -37,7 +37,7 @@ public class ErrorCountHtmlUtils {
         //改进后可以去全部名称的
         //Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('(.*)'\\);\">(\\d+)</a></td>.*");
         //原系统，\s匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]。 （） group用
-        Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('([\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+)'\\);\">(\\d+)</a></td>\\s*" +
+        Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.([\\u4e00-\\u9fa5]+)'\\);\">(\\d+)</a></td>\\s*" +
                 "<td class=\"td\".*>(.*)</td>.*");
         Matcher matcher = pattern.matcher(html);
         Map<String, String> map = new HashMap();

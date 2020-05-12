@@ -52,6 +52,10 @@ public class QuartzTask {
     @Value("${com.no}")
     private String comNo;
 
+    //昨日统计的指标，今天几点之后采集
+    @Value("${yesterday.indicator.collection.time}")
+    private String collectionTime;
+
     @Autowired
     private IndicatorDataDao indicatorDataDao;
 
@@ -61,6 +65,9 @@ public class QuartzTask {
 
     //指标工具对象
     IndicatorUtils indicatorUtils = new IndicatorUtils();
+
+    //变电站遥测得分
+    BDZYCSXScore bdzycsxScore = null;
 
     /**
      * 业务逻辑
@@ -73,6 +80,9 @@ public class QuartzTask {
 
         logger.info("参数-是否发送短信(0不发送，1发送): " + sendFlag);
         logger.info("参数-发送号码：" + phone);
+        int collectHour = Integer.parseInt(collectionTime);
+        logger.info("参数-昨日的统计的指标，今天几点采集：" + collectHour);
+
 
         logger.info("供电公司中文名称：" + comName);
         logger.info("供电公司中文简称：" + comShortName);
@@ -80,9 +90,14 @@ public class QuartzTask {
 
 
 
+        //获取上次的指标结果
+        indicatorUtils.setListIndicatorOld(indicatorDataDao.queryAllIndicator());
+
 
         //变电站遥测刷新率
         this.dealBDZSXScore();
+        //状态估计合格率
+        this.dealZTGJScore();
 
 
 
@@ -121,18 +136,21 @@ public class QuartzTask {
             logger.info("开关指标得分获取结果：resultJSON：" + resultJSON);
             double scoreKGZB = collectScoreByForm.dealcurrentScoreJSON(resultJSON);
             logger.info("开关指标得分：" + scoreKGZB);
+            if(scoreKGZB>0){
+                /********存储历史指标*********/
+                //新建历史对象
+                IndicatorData  indicatorData = new IndicatorData();
+                //设置指标id、值、时间
+                indicatorData.setIdcID(2);
+                indicatorData.setIdcValue((float)scoreKGZB);
+                indicatorData.setCollectTime(new Date(currentTime));
+                //插入历史指标
+                int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
+                //存储实时表
+                indicatorDataDao.updateIndicatorRtData(2,(float)scoreKGZB , new Date(currentTime));
+            }
 
-            /********存储历史指标*********/
-            //新建历史对象
-            IndicatorData  indicatorData = new IndicatorData();
-            //设置指标id、值、时间
-            indicatorData.setIdcID(2);
-            indicatorData.setIdcValue((float)scoreKGZB);
-            indicatorData.setCollectTime(new Date(currentTime));
-            //插入历史指标
-            int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
-            //存储实时表
-            indicatorDataDao.updateIndicatorRtData(2,(float)scoreKGZB , new Date(currentTime));
+
 
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -151,17 +169,21 @@ public class QuartzTask {
             logger.info("遥测遥信获取结果：resultJSON：" + resultJSON_ycyx);
             double scoreYCYX = collectScoreByForm.dealcurrentScoreJSON(resultJSON_ycyx);
             logger.info("遥测遥信得分：" + scoreYCYX);
+            if(scoreYCYX>0){
+                /********存储历史指标*********/
+                //新建历史对象
+                IndicatorData  indicatorData = new IndicatorData();
+                //设置指标id、值、时间
+                indicatorData.setIdcID(3);
+                indicatorData.setIdcValue((float)scoreYCYX);
+                indicatorData.setCollectTime(new Date(currentTime));
+                //插入历史指标
+                int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
+                //更新实时
+                indicatorDataDao.updateIndicatorRtData(3,(float)scoreYCYX , new Date(currentTime));
+            }
 
-            /********存储历史指标*********/
-            //新建历史对象
-            IndicatorData  indicatorData = new IndicatorData();
-            //设置指标id、值、时间
-            indicatorData.setIdcID(3);
-            indicatorData.setIdcValue((float)scoreYCYX);
-            indicatorData.setCollectTime(new Date(currentTime));
-            //插入历史指标
-            int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
-            indicatorDataDao.updateIndicatorRtData(3,(float)scoreYCYX , new Date(currentTime));
+
 
         }catch (Exception e){
             logger.error("遥测遥信出错" + e.getMessage());
@@ -172,47 +194,20 @@ public class QuartzTask {
 
 
 
-        /****6 状态估计合格率****/
 
-        try {
-            //指标数据获取
-            logger.info("状态估计合格率指标数据获取开始：");
-            CollectDataZTGJ collectData= new CollectDataZTGJ();
-            collectData.login(null,null,null);
-            String svgImage = collectData.getSvgImageForKHZB(null);
-            logger.info("状态估计合格率指标指标数据：svgImage：" + svgImage);
-            double scoreZTGJ =  collectData.getResultZTGJ(svgImage,comShortName);
-            logger.info("状态估计合格率指标得分：" + scoreZTGJ);
-
-            /********存储历史指标*********/
-            //新建历史对象
-            IndicatorData  indicatorData = new IndicatorData();
-            //设置指标id、值、时间
-            indicatorData.setIdcID(6);
-            indicatorData.setIdcValue((float)scoreZTGJ);
-            indicatorData.setCollectTime(new Date(currentTime));
-            //插入历史指标
-            int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
-            //更新实时
-            indicatorDataDao.updateIndicatorRtData(6,(float)scoreZTGJ , new Date(currentTime));
-
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            e.getMessage();
-        }
 
         //更新指标工具对象
-        indicatorUtils.setListIndicator(indicatorDataDao.queryAllIndicator());
+        indicatorUtils.setListIndicatorNew(indicatorDataDao.queryAllIndicator());
         /**
          * 这两个指标都是今天才能取到昨天统计的值，所以都定义为每天8之后点取指标。
          * 如果没取到则继续去，如果取到了，则更新最新记录、历史记录、以及历史记录对应的详情，
          * 下次5分钟时判断当天是否已经有值
          */
 
-        //如果最后时间不是今天，并且当前时间是8点以后
+        //如果最后时间不是今天，并且当前时间是collectionTime点以后
         Calendar calendar  = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if(!indicatorUtils.getIndicatorIsUpdateToday(4) && hour>8){
+        if(!indicatorUtils.getIndicatorIsUpdateToday(4) && hour>collectHour){
             try {
                 //*************4、积分电量得分  昨日的值*************
                 String scoreURL_jfdl = "http://10.55.6.114/analysis/TmrJFMonthCord_j.gc";
@@ -227,18 +222,20 @@ public class QuartzTask {
                 logger.info("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
                 double scoreJFDL = collectScoreByForm.dealcurrentScoreJSON(resultJSON_jfdl);
                 logger.info("积分电量得分：" + scoreJFDL);
+                if(scoreJFDL>0){
+                    /********存储历史指标*********/
+                    //新建历史对象
+                    IndicatorData  indicatorData = new IndicatorData();
+                    //设置指标id、值、时间
+                    indicatorData.setIdcID(4);
+                    indicatorData.setIdcValue((float)scoreJFDL);
+                    indicatorData.setCollectTime(new Date(currentTime));
+                    //插入历史指标
+                    int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
+                    //更新实时
+                    indicatorDataDao.updateIndicatorRtData(4,(float)scoreJFDL , new Date(currentTime));
+                }
 
-                /********存储历史指标*********/
-                //新建历史对象
-                IndicatorData  indicatorData = new IndicatorData();
-                //设置指标id、值、时间
-                indicatorData.setIdcID(4);
-                indicatorData.setIdcValue((float)scoreJFDL);
-                indicatorData.setCollectTime(new Date(currentTime));
-                //插入历史指标
-                int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
-                //更新实时
-                indicatorDataDao.updateIndicatorRtData(4,(float)scoreJFDL , new Date(currentTime));
             }catch (Exception e){
                 logger.error("积分电量出错" + e.getMessage());
                 e.getMessage();
@@ -247,7 +244,7 @@ public class QuartzTask {
 
 
 
-        if(!indicatorUtils.getIndicatorIsUpdateToday(5) && hour>8){
+        if(!indicatorUtils.getIndicatorIsUpdateToday(5) && hour>collectHour){
             try {
                 //*************5、事故分闸得分  昨日的值*************
                 //url http://10.55.6.114/analysis/Daycord_j.gc
@@ -260,16 +257,19 @@ public class QuartzTask {
                 logger.info("事故分闸得分获取结果：resultJSON：" + resultJSON_sgfz);
                 double scoreSGFZ = collectScoreByForm.dealcurrentScoreJSON(resultJSON_sgfz);
 
-                /********存储历史指标*********/
-                //新建历史对象
-                IndicatorData  indicatorData = new IndicatorData();
-                //设置指标id、值、时间
-                indicatorData.setIdcID(5);
-                indicatorData.setIdcValue((float)scoreSGFZ);
-                indicatorData.setCollectTime(new Date(currentTime));
-                //插入历史指标
-                int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
-                indicatorDataDao.updateIndicatorRtData(5,(float)scoreSGFZ , new Date(currentTime));
+                if(scoreSGFZ>0){
+                    /********存储历史指标*********/
+                    //新建历史对象
+                    IndicatorData  indicatorData = new IndicatorData();
+                    //设置指标id、值、时间
+                    indicatorData.setIdcID(5);
+                    indicatorData.setIdcValue((float)scoreSGFZ);
+                    indicatorData.setCollectTime(new Date(currentTime));
+                    //插入历史指标
+                    int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
+                    indicatorDataDao.updateIndicatorRtData(5,(float)scoreSGFZ , new Date(currentTime));
+                }
+
 
             }catch (Exception e){
                 logger.error("事故分闸出错" + e.getMessage());
@@ -280,12 +280,47 @@ public class QuartzTask {
 
 
         //更新指标工具对象
-        indicatorUtils.setListIndicator(indicatorDataDao.queryAllIndicator());
+        indicatorUtils.setListIndicatorNew(indicatorDataDao.queryAllIndicator());
 
         //执行发送短信流程
 
         this.sendMsg(indicatorUtils);
 
+    }
+
+
+    /**
+     * 处理状态估计合格率
+     */
+    private void dealZTGJScore(){
+        /****6 状态估计合格率****/
+
+        try {
+            //指标数据获取
+            logger.info("状态估计合格率指标数据获取开始：");
+            CollectDataZTGJ collectData= new CollectDataZTGJ();
+            collectData.login(null,null,null);
+            String svgImage = collectData.getSvgImageForKHZB(null);
+            logger.info("状态估计合格率指标指标数据：svgImage：" + svgImage);
+            double scoreZTGJ =  collectData.getResultZTGJ(svgImage,comShortName);
+            logger.info("状态估计合格率指标得分：" + scoreZTGJ);
+            if(scoreZTGJ>0){
+                /********存储历史指标*********/
+                //新建历史对象
+                IndicatorData  indicatorData = new IndicatorData();
+                //设置指标id、值、时间
+                indicatorData.setIdcID(6);
+                indicatorData.setIdcValue((float)scoreZTGJ);
+                indicatorData.setCollectTime(new Date(currentTime));
+                //插入历史指标
+                int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
+                //更新实时
+                indicatorDataDao.updateIndicatorRtData(6,(float)scoreZTGJ , new Date(currentTime));
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            e.getMessage();
+        }
     }
 
 
@@ -321,35 +356,36 @@ public class QuartzTask {
             collectDataBDZYCSX.login(null,null,null);
             String detailsHtml = collectDataBDZYCSX.getDetailsHtml(null,comShortName,null,null);
             logger.info("变电站遥测刷新指标数据：resultHTML：" + detailsHtml);
-            BDZYCSXScore bdzycsxScore =  collectDataBDZYCSX.getCurrentBDZYCSXScore(detailsHtml);
+            bdzycsxScore =  collectDataBDZYCSX.getCurrentBDZYCSXScore(detailsHtml);
             double score = bdzycsxScore.getScore();
             logger.info("变电站遥测刷新指标得分：" + score);
+            //获取到数据
+            if(score>0){
+                /********更新实时*********/
+                Integer id  = indicatorDataDao.updateIndicatorRtData(1,(float)score , new Date(currentTime));
+                /********存储历史指标*********/
+                //新建历史对象
+                IndicatorData  indicatorData = new IndicatorData();
+                //设置指标id、值、时间
+                indicatorData.setIdcID(1);
+                indicatorData.setIdcValue((float)score);
+                indicatorData.setCollectTime(new Date(currentTime));
+                //插入历史指标
+                int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
 
-            /********更新实时*********/
-            Integer id  = indicatorDataDao.updateIndicatorRtData(1,(float)score , new Date(currentTime));
-            /********存储历史指标*********/
-            //新建历史对象
-            IndicatorData  indicatorData = new IndicatorData();
-            //设置指标id、值、时间
-            indicatorData.setIdcID(1);
-            indicatorData.setIdcValue((float)score);
-            indicatorData.setCollectTime(new Date(currentTime));
-            //插入历史指标
-            int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
 
-
-            /********存储历史指标对应的详情扣分*********/
-            if(id1==1 && score<100){
-                //历史指标插入成功，并且得分小于100（说明有问题点数）进行详情插入
-                List<BDZYCSXDetails> detailsList = bdzycsxScore.getDetailsList();
-                for(BDZYCSXDetails details: detailsList){
-                    indicatorDataDao.insertBDZYCSXDetailData(indicatorData.getId(),details.getStationName(),
-                            details.getProblemCount(),details.getDeductPoint());
+                /********存储历史指标对应的详情扣分*********/
+                if(id1==1 && score<100){
+                    //历史指标插入成功，并且得分小于100（说明有问题点数）进行详情插入
+                    List<BDZYCSXDetails> detailsList = bdzycsxScore.getDetailsList();
+                    for(BDZYCSXDetails details: detailsList){
+                        indicatorDataDao.insertBDZYCSXDetailData(indicatorData.getId(),details.getStationName(),
+                                details.getProblemCount(),details.getDeductPoint());
+                    }
                 }
-
             }
 
-            logger.info("indicatorData.id：" + indicatorData.getId());
+
 
 
         }catch (Exception e){
@@ -371,16 +407,50 @@ public class QuartzTask {
             int sendMsgCount = indicatorUtils.getIndicatorSentMsgCount(indicatorID);
             //指标限值
             float limitValue = indicatorUtils.getIndicatorLimitValue(indicatorID);
-            //指标最后获取值
-            float lastValue = indicatorUtils.getIndicatorLastValue(indicatorID);
-            //最后更新值不出错（-1），并且小于限值，并且发送次数小于3
-            if(lastValue!=-1 && lastValue < limitValue && 1==sendFlag && sendMsgCount<2){
+
+            //指标旧值
+            float indicatorValueOld = indicatorUtils.getIndicatorLastValue(indicatorID,0);
+            //指标新值
+            float indicatorValueNew = indicatorUtils.getIndicatorLastValue(indicatorID,1);
+            //最后更新值不出错（-1），并且小于限值，而且本次指标和上次指标值不一致，并且发送次数小于2
+            if(indicatorValueNew!=-1 && indicatorValueNew < limitValue && 1==sendFlag && sendMsgCount<1 && (Math.abs(indicatorValueNew-indicatorValueOld)>0.001)){
                 //发送短息
-                logger.info(name + "得分:" + lastValue + "，小于限值" + limitValue + "发送短息到" + phone);
-                smsService.sendSms(phone, name +"得分:" + lastValue + "，小于限值" + limitValue);
+                logger.info(name + "得分:" + indicatorValueNew + "，小于限值" + limitValue + "发送短息到" + phone);
+                for(String phoneNo : phone.split(";")){
+                    if(phoneNo.length()>0){
+                        if(indicatorID==1 &&  bdzycsxScore.getDetailsList().size()>0){
+                            //变电站遥测刷新
+                            List<BDZYCSXDetails> detailsList = bdzycsxScore.getDetailsList();
+                            int firstProblemCount = 0;
+                            int otherProblemCount = 0;
+                            String firstDevName = null;
+                            for(int i=0; i< detailsList.size(); i++){
+                                BDZYCSXDetails details = detailsList.get(i);
+                                if(i==0){
+                                    //第一台设备
+                                    firstProblemCount = details.getProblemCount();
+                                    firstDevName = details.getStationName();
+                                }else {
+                                    //剩余设备
+                                    otherProblemCount = otherProblemCount + details.getProblemCount();
+                                }
+                                logger.info(name +"得分:" + indicatorValueNew + "," + firstDevName + ":" + firstProblemCount +
+                                        "剩余设备问题点数：" + firstProblemCount);
+                                smsService.sendSms(phoneNo, name +"得分:" + indicatorValueNew + "," + firstDevName + ":" + firstProblemCount +
+                                        "剩余设备问题点数：" + firstProblemCount);
+
+                            }
+                        }else {
+                            smsService.sendSms(phoneNo, name +"得分:" + indicatorValueNew);
+                        }
+
+                    }
+
+                }
+
                 //更新最后发送次数
                 indicatorDataDao.updateIndicatorMsgSendCount(indicatorID,sendMsgCount+1);
-            }else if(lastValue >= limitValue){
+            }else{
                 //
                 indicatorDataDao.updateIndicatorMsgSendCount(indicatorID,0);
             }

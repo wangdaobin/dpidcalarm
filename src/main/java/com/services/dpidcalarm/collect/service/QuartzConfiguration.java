@@ -63,8 +63,8 @@ public class QuartzConfiguration {
 
         tigger.setJobDetail(reptilianJob);
 
-        //cron表达式，每整5分钟执行一次
-        tigger.setCronExpression("0 0/5 * * * ? ");
+        //cron表达式，每整10分钟执行一次
+        tigger.setCronExpression("0 0/10 * * * ? ");
 
         //cron表达式，每整5秒执行一次
         //tigger.setCronExpression("*/5 * * * * ?");

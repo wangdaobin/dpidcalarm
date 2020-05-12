@@ -1,0 +1,22 @@
+重庆@南岸@63@99.71@99.71@3788@3777@0@275@271@532@531@331@331@是@2650@2644@0@0@
+fa_name，name,sum_st,rate_dv,srate_meas,sum_meas,good_meas,bad_point,sum_v,good_v,sum_ln,good_ln,sum_xf,good_xf,visible,sum_ld,good_ld,sum_un,good_un
+
+fa_name： 父区域名称
+name： 地区名
+sum_st： 厂站数
+rate_dv：地区合格率
+srate_meas：？
+sum_meas：遥测总数
+good_meas：遥测合格数
+bad_point：错误遥信数
+sum_v：电压总数
+good_v：电压合格数
+sum_ln：线路总数
+good_ln：线路合格数
+sum_xf：变压器总数
+good_xf：变压器合格数
+visible：？
+sum_ld：负荷遥测总数
+good_ld：
+sum_un：
+good_un：
