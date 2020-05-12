@@ -32,6 +32,11 @@
                                     align="center">
                             </el-table-column>
                             <el-table-column
+                                    prop="name"
+                                    label="采集周期"
+                                    align="center">
+                            </el-table-column>
+                            <el-table-column
                                     prop="desc"
                                     label="备注"
                                     align="center">
@@ -52,7 +57,7 @@
                     </template>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="采集维护">
+            <el-tab-pane label="采集维护" v-if="false">
                 <div class="condition-container" v-cloak>
                     <el-button type="primary" style="float: right;margin-right: 10px" icon="el-icon-circle-plus" @click="addIndicatorCollectInfo">添加</el-button>
                 </div>

@@ -19,7 +19,7 @@
         <div class="form-item">
             <div class="password icon-position"></div>
             <input  type="password"  class="input-position input-style" autocomplete="off" name="password" id="password" placeholder="登录账号">
-            <p class="tip">用户名或密码不正确</p>
+            <p id="login_err_tip" class="tip">用户名或密码不正确</p>
         </div>
         <div class="form-item"><button id="submit">登 录</button></div>
         <div class="reg-bar">
@@ -34,7 +34,22 @@
         $('#submit').on('click', function () {
             $('#loginInfo').submit();
         })
-    })
+        let errFlag = getQueryVariable("error");
+        if(errFlag != null){
+            $("#login_err_tip").show();
+        }else{
+            $("#login_err_tip").hidden();
+        }
+    });
+     function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(null);
+    }
 </script>
 
 </body>

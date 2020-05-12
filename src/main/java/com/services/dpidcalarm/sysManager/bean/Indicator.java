@@ -8,6 +8,7 @@ package com.services.dpidcalarm.sysManager.bean;
 public class Indicator {
     private int code;
     private String name;
+    private String cycle;
     private String desc;
 
     public int getCode() {
@@ -32,5 +33,13 @@ public class Indicator {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getCycle() {
+        return cycle;
+    }
+
+    public void setCycle(String cycle) {
+        this.cycle = cycle;
     }
 }
