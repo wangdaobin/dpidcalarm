@@ -1,0 +1,7 @@
+com.name =南岸分公司
+com.shortname =南岸
+com.no =113715891329302535
+
+com.name =江津分公司
+com.shortname =江津
+com.no =113715891329302543
