@@ -1,9 +1,13 @@
 package com.services.dpidcalarm.utils;
+import com.services.dpidcalarm.collect.bean.SvgUtil;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -28,12 +32,13 @@ public class ErrorCountHtmlUtils {
         //         "<td class=\"td\" style=\"text-align: left;\">重庆.长寿.涪陵.大桥站</td>" +
         //         "<td class=\"td\"><a href=\"javascript:void(0);\" onclick=\"warnStationReport('重庆.长寿.涪陵.大桥站');\">247</a></td>" +
         //         "<td class=\"td\" style=\"color: red;\">0.66</td>";
+        //原系统，能取到每行，只有扣分数，没有问题点数
         //Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.([\\u4e00-\\u9fa5]+)'\\);\">(\\d+)</a></td>.*");
-        //Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.([\\u4e00-\\u9fa5]+)'\\);\">(\\d+)</a></td>.*");
-        Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('(.*)'\\);\">(\\d+)</a></td>\\W*" +
-                "<td class=\"td\" style=\"color: red;\">(.*)</td>.*");
-        // Pattern pattern = compile("onclick=\"warnStationReport\\('[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.([\\u4e00-\\u9fa5]+\\.([\\u4e00-\\u9fa5]+)'\\);\">");
-
+        //改进后可以去全部名称的
+        //Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('(.*)'\\);\">(\\d+)</a></td>.*");
+        //原系统，\s匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]。 （） group用
+        Pattern pattern = compile(".*<td class=\"td\"><a href=\"javascript:void\\(0\\);\" onclick=\"warnStationReport\\('[\\u4e00-\\u9fa5]+\\.[\\u4e00-\\u9fa5]+\\.([\\u4e00-\\u9fa5]+)'\\);\">(\\d+)</a></td>\\s*" +
+                "<td class=\"td\".*>(.*)</td>.*");
         Matcher matcher = pattern.matcher(html);
         Map<String, String> map = new HashMap();
         while (matcher.find()) {
@@ -43,6 +48,7 @@ public class ErrorCountHtmlUtils {
             if(null==problemCount || "".equals(problemCount) || "0".equals(problemCount)){
                 continue;
             }
+            map.put(station, problemCount + ";");
             map.put(station, problemCount + ";" + deductPoints);
         }
         return map;
@@ -96,20 +102,32 @@ public class ErrorCountHtmlUtils {
         return false;
     }
     public static void main(String[] args) {
+        Calendar calendar  = Calendar.getInstance();
+        int hous = calendar.get(Calendar.HOUR_OF_DAY);
+
+        ErrorCountHtmlUtils.getCountMap("");
 
         String str = MyDateUtils.getYesterdayDayStr();
 
 
-        File file  = new File("E:\\31-重庆\\网站数据\\指标20191212\\01变电站刷新\\变电站刷新-详细-.html");
+        File file  = new File("E:\\31-重庆\\网站数据\\指标20191212\\01变电站刷新\\变电站刷新-详细--20191224.html");
         try {
             String fileContent = FileUtils.readFileToString(file);
             Map<String,String> map = ErrorCountHtmlUtils.getCountMap(fileContent);
             // double currentScore = ErrorCountHtmlUtils.getCurrentScore(fileContent);
-            //System.out.println(currentScore);
+            // System.out.println(currentScore);
         }catch (Exception e){
             e.printStackTrace();
         }
 
+
+        File file1  = new File("D:/a.xml");
+        try {
+            String fileContent = FileUtils.readFileToString(file1);
+            SvgUtil.getQulifyRateFloat(fileContent,"南岸");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         ;
     }
