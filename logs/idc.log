@@ -1,0 +1,62 @@
+2019.12.19 at 18:39:08.416 CST WARN  org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer 78 logDuplicateJsonObjectsWarning - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/E:/mavenRepo/repo/org/json/json/20190722/json-20190722.jar!/org/json/JSONObject.class
+	jar:file:/E:/mavenRepo/repo/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+2019.12.19 at 18:39:18.576 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'dataInfoDao' and 'com.services.dpidcalarm.datainfo.dao.DataInfoDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:18.580 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'dataInfoErrorDao' and 'com.services.dpidcalarm.datainfo.dao.DataInfoErrorDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:18.580 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'calendarConfigurationDao' and 'com.services.dpidcalarm.sconf.dao.CalendarConfigurationDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:18.581 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'propertiesConfigurationDao' and 'com.services.dpidcalarm.sconf.dao.PropertiesConfigurationDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:18.581 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'timingConfigurationDao' and 'com.services.dpidcalarm.sconf.dao.TimingConfigurationDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:18.581 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'smSendLogDao' and 'com.services.dpidcalarm.smslog.dao.SmSendLogDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:18.581 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'userMapper' and 'com.services.dpidcalarm.sysManager.dao.UserMapper' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:18.582 CST WARN  org.mybatis.logging.Logger 44 warn - No MyBatis mapper was found in '[com.services.dpidcalarm]' package. Please check your configuration.
+2019.12.19 at 18:39:20.135 CST ERROR com.services.dpidcalarm.collect.service.QuartzConfiguration 68 cronJobTrigger - cronË°®ËææÂºèÔºåÊØè5ÁßíÈíüÊâßË°å‰∏ÄÊ¨°
+2019.12.19 at 18:39:20.634 CST WARN  org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration 106 checkTemplateLocationExists - Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2019.12.19 at 18:39:21.099 CST ERROR org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter 40 report - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2019.12.19 at 18:39:53.652 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'dataInfoDao' and 'com.services.dpidcalarm.datainfo.dao.DataInfoDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:53.656 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'dataInfoErrorDao' and 'com.services.dpidcalarm.datainfo.dao.DataInfoErrorDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:53.656 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'calendarConfigurationDao' and 'com.services.dpidcalarm.sconf.dao.CalendarConfigurationDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:53.656 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'propertiesConfigurationDao' and 'com.services.dpidcalarm.sconf.dao.PropertiesConfigurationDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:53.657 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'timingConfigurationDao' and 'com.services.dpidcalarm.sconf.dao.TimingConfigurationDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:53.657 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'smSendLogDao' and 'com.services.dpidcalarm.smslog.dao.SmSendLogDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:53.657 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'userMapper' and 'com.services.dpidcalarm.sysManager.dao.UserMapper' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:39:53.658 CST WARN  org.mybatis.logging.Logger 44 warn - No MyBatis mapper was found in '[com.services.dpidcalarm]' package. Please check your configuration.
+2019.12.19 at 18:39:54.850 CST ERROR com.services.dpidcalarm.collect.service.QuartzConfiguration 68 cronJobTrigger - cronË°®ËææÂºèÔºåÊØè5ÁßíÈíüÊâßË°å‰∏ÄÊ¨°
+2019.12.19 at 18:39:55.225 CST WARN  org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration 106 checkTemplateLocationExists - Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2019.12.19 at 18:41:53.970 CST WARN  org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer 78 logDuplicateJsonObjectsWarning - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/E:/mavenRepo/repo/org/json/json/20190722/json-20190722.jar!/org/json/JSONObject.class
+	jar:file:/E:/mavenRepo/repo/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+2019.12.19 at 18:41:55.039 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'dataInfoDao' and 'com.services.dpidcalarm.datainfo.dao.DataInfoDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:41:55.039 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'dataInfoErrorDao' and 'com.services.dpidcalarm.datainfo.dao.DataInfoErrorDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:41:55.040 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'calendarConfigurationDao' and 'com.services.dpidcalarm.sconf.dao.CalendarConfigurationDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:41:55.041 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'propertiesConfigurationDao' and 'com.services.dpidcalarm.sconf.dao.PropertiesConfigurationDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:41:55.041 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'timingConfigurationDao' and 'com.services.dpidcalarm.sconf.dao.TimingConfigurationDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:41:55.042 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'smSendLogDao' and 'com.services.dpidcalarm.smslog.dao.SmSendLogDao' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:41:55.043 CST WARN  org.mybatis.logging.Logger 44 warn - Skipping MapperFactoryBean with name 'userMapper' and 'com.services.dpidcalarm.sysManager.dao.UserMapper' mapperInterface. Bean already defined with the same name!
+2019.12.19 at 18:41:55.044 CST WARN  org.mybatis.logging.Logger 44 warn - No MyBatis mapper was found in '[com.services.dpidcalarm]' package. Please check your configuration.
+2019.12.19 at 18:41:56.410 CST ERROR com.services.dpidcalarm.collect.service.QuartzConfiguration 68 cronJobTrigger - cron±Ì¥Ô Ω£¨√ø5√Î÷”÷¥––“ª¥Œ
+2019.12.19 at 18:41:57.522 CST WARN  org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration 106 checkTemplateLocationExists - Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
