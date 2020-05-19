@@ -83,8 +83,8 @@ public class IndicatorUtils {
      * @return
      */
     public float getIndicatorLimitValue(int indicatorID){
-        if(this.listIndicatorNew!=null){
-            for(Indicator indicator:this.listIndicatorNew){
+        if(this.listIndicatorOld!=null){
+            for(Indicator indicator:this.listIndicatorOld){
                 //找到该ID
                 if(indicatorID==indicator.getId()){
                     return indicator.getLimitValue();

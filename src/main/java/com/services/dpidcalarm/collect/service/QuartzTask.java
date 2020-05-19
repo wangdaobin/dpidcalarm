@@ -36,11 +36,27 @@ import java.util.Map;
 @Service
 public class QuartzTask {
     private static Logger logger = LoggerFactory.getLogger(QuartzTask.class);
+
+    //短信发送,0:不发送，1:发送，
     @Value("${send.flag}")
     private int sendFlag;
 
+    //#短信发送号码,多人用分号隔开13880646293;13637857016
     @Value("${phone}")
     private String phone;
+
+    //#短信平台地址
+    @Value("${sms.address}")
+    private String smsAddress;
+
+    //#短信平台账号
+    @Value("${sms.user}")
+    private String smsUser;
+
+    //#短信平台密码
+    @Value("${sms.password}")
+    private String smsPassword;
+
 
     //供电公司中文名称（含“分公司”3个字）
     @Value("${com.name}")
@@ -61,25 +77,28 @@ public class QuartzTask {
 
     double limitValue ;
     long currentTime;
-    private SmsService smsService = null;
 
     //指标工具对象
     IndicatorUtils indicatorUtils = new IndicatorUtils();
 
     //变电站遥测得分
-    BDZYCSXScore bdzycsxScore = null;
+    BDZYCSXScore bdzycsxScore = new BDZYCSXScore();
 
     /**
      * 业务逻辑
      */
     public void reptilian(){
-        smsService = new SmsService();
+        //短信平台参数赋值
+        SmsService.setSMSInfo(smsAddress, smsUser, smsPassword);
         currentTime = System.currentTimeMillis();
 
 
 
         logger.info("参数-是否发送短信(0不发送，1发送): " + sendFlag);
         logger.info("参数-发送号码：" + phone);
+        logger.info("参数-短信平台地址：" + smsAddress);
+        logger.info("参数-短信平台账号：" + smsUser);
+        logger.info("参数-短信平台密码：" + smsPassword);
         int collectHour = Integer.parseInt(collectionTime);
         logger.info("参数-昨日的统计的指标，今天几点采集：" + collectHour);
 
@@ -412,10 +431,20 @@ public class QuartzTask {
             float indicatorValueOld = indicatorUtils.getIndicatorLastValue(indicatorID,0);
             //指标新值
             float indicatorValueNew = indicatorUtils.getIndicatorLastValue(indicatorID,1);
-            //最后更新值不出错（-1），并且小于限值，而且本次指标和上次指标值不一致，并且发送次数小于2
+            //最后更新值不出错（-1），并且小于限值，而且本次指标和上次指标值不一致，并且发送次数小于1
             if(indicatorValueNew!=-1 && indicatorValueNew < limitValue && 1==sendFlag && sendMsgCount<1 && (Math.abs(indicatorValueNew-indicatorValueOld)>0.001)){
                 //发送短息
                 logger.info(name + "得分:" + indicatorValueNew + "，小于限值" + limitValue + "发送短息到" + phone);
+                //测试
+                // BDZYCSXDetails mBDZYCSXDetails = new BDZYCSXDetails();
+                // mBDZYCSXDetails.setStationName("厂站M");
+                // mBDZYCSXDetails.setDeductPoint(0.02f);
+                // mBDZYCSXDetails.setProblemCount(35);
+                // bdzycsxScore.getDetailsList().add(mBDZYCSXDetails);
+                // mBDZYCSXDetails.setStationName("厂站N");
+                // mBDZYCSXDetails.setDeductPoint(0.03f);
+                // mBDZYCSXDetails.setProblemCount(22);
+                // bdzycsxScore.getDetailsList().add(mBDZYCSXDetails);
                 for(String phoneNo : phone.split(";")){
                     if(phoneNo.length()>0){
                         if(indicatorID==1 &&  bdzycsxScore.getDetailsList().size()>0){
@@ -424,6 +453,10 @@ public class QuartzTask {
                             int firstProblemCount = 0;
                             int otherProblemCount = 0;
                             String firstDevName = null;
+                            //组织想要的南岸想要的短信格式
+                            /**
+                             * 因为同时会有很多变电站设备发生问题，考虑到短信内容如果把这一段时间内所有发生问题的设备名称等信息都列出来，会导致短信超出字数限制，导致一次告警会发很多条短信给客户，所以短信内容只会把这一段时间内发生的问题的第一台设备（本段时间内采集到的第一台设备）具体信息在短信内展示，其余的设备信息在短信后面加一句话“剩余设备的问题点数：XXXX”
+                             */
                             for(int i=0; i< detailsList.size(); i++){
                                 BDZYCSXDetails details = detailsList.get(i);
                                 if(i==0){
@@ -434,16 +467,29 @@ public class QuartzTask {
                                     //剩余设备
                                     otherProblemCount = otherProblemCount + details.getProblemCount();
                                 }
-                                logger.info(name +"得分:" + indicatorValueNew + "," + firstDevName + ":" + firstProblemCount +
-                                        "剩余设备问题点数：" + firstProblemCount);
-                                smsService.sendSms(phoneNo, name +"得分:" + indicatorValueNew + "," + firstDevName + ":" + firstProblemCount +
-                                        "剩余设备问题点数：" + firstProblemCount);
-
                             }
-                        }else {
-                            smsService.sendSms(phoneNo, name +"得分:" + indicatorValueNew);
-                        }
+                            String msgContext = name +"得分:" + indicatorValueNew + "," + firstDevName + ":" + firstProblemCount +
+                                    ",剩余设备问题点数：" + firstProblemCount;
 
+                            //发送短信
+                            boolean sendResult = SmsService.sendSms(phoneNo, msgContext);
+                            int resultInt = 0;
+                            if(sendResult){
+                                resultInt = 1;
+                            }
+                            indicatorDataDao.insertSMLog(1,phoneNo,msgContext,resultInt,new Date());
+                            logger.info("发送短信日志："+  phoneNo + msgContext);
+                        }else {
+                            //其余没有详情的指标，暂时只发送得分
+                            String msgContext = name +"得分:" + indicatorValueNew ;
+                            boolean sendResult = SmsService.sendSms(phoneNo, msgContext);
+                            int resultInt = 0;
+                            if(sendResult){
+                                resultInt = 1;
+                            }
+                            indicatorDataDao.insertSMLog(1,phoneNo,msgContext,resultInt,new Date());
+                            logger.info("发送短信日志："+  phoneNo + msgContext);
+                        }
                     }
 
                 }

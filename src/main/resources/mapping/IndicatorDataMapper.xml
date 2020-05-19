@@ -29,4 +29,10 @@
       insert into ${schema}.indicator_details_bdzycsx (indicator_data_id,station_name,problem_count,deduct_points)
        values (#{indicatorDataId},#{stationName},#{problemCount},#{deductPoints});
     </insert>
+
+    <!-- 短信日志入库-->
+    <insert id="insertSMLog" >
+      insert into ${schema}.msg_log (user_id,phone,content,status,send_time)
+       values (#{userId},#{phone},#{content},#{status},#{sendTime});
+    </insert>
 </mapper>

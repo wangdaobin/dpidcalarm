@@ -236,7 +236,7 @@ public class SinglePercentOfPassServiceCore extends ThreadCommon
                                 for (String phone : phoneList) {
                                     try {
                                         //发送短信
-                                        this.smsService.sendSms(phone, content);
+                                        SmsService.sendSms(phone, content);
                                         j++;
                                     } catch (Exception e) {
                                         logger.error(new StringBuilder().append("短信发送异常:").append(e.getMessage()).toString());
@@ -261,7 +261,7 @@ public class SinglePercentOfPassServiceCore extends ThreadCommon
                             int j = 0;
                             for (String phone : phoneList) {
                                 try {
-                                    this.smsService.sendSms(phone, content);
+                                    SmsService.sendSms(phone, content);
                                     j++;
                                 } catch (Exception e) {
                                     e.printStackTrace();

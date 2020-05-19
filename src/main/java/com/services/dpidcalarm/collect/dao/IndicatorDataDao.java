@@ -61,4 +61,19 @@ public abstract interface IndicatorDataDao{
      */
     Integer insertBDZYCSXDetailData(@Param("indicatorDataId") int indicatorDataId,
                                     @Param("stationName") String stationName, @Param("problemCount") int problemCount,@Param("deductPoints") float deductPoints);
+
+
+    /**
+     * 插入短信发送记录
+     * @param userId
+     * @param phone
+     * @param content
+     * @param status
+     * @param sendTime
+     * @return
+     */
+    Integer insertSMLog(@Param("userId") int userId, @Param("phone") String phone,@Param("content") String content,
+                        @Param("status") int status, @Param("sendTime") Date sendTime);
+
+
 }

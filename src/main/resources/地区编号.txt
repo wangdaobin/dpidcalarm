@@ -5,3 +5,15 @@ com.no =113715891329302535
 com.name =江津分公司
 com.shortname =江津
 com.no =113715891329302543
+
+
+
+南岸短信平台地址和账号（账号已经验证过了）
+http://10.55.22.180:8080/sdc_Message/services/SMSplatform?wsdl
+账号：oms2
+密码：nari-1234
+
+市调短信平台地址和账号（市调的账号是从数据中心的样例文档摘出来的）
+http://10.55.6.35:8080/sdc_Message/services/SMSplatform?wsdl
+账号：sy_0001
+密码：sy_0001
