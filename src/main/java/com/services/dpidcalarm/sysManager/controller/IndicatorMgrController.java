@@ -5,6 +5,7 @@ import com.services.dpidcalarm.sysManager.bean.IndicatorAttr;
 import com.services.dpidcalarm.sysManager.service.IndicatorMgrService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,4 +35,14 @@ public class IndicatorMgrController {
         return indicatorMgrService.queryIndicatorAttr();
     }
 
+    @RequestMapping("addIndicator")
+    @ResponseBody
+    public int addIndicator(@RequestBody Indicator indicator){
+        return indicatorMgrService.addIndicator(indicator);
+    }
+    @RequestMapping("modifyIndicator")
+    @ResponseBody
+    public int modifyIndicator(@RequestBody Indicator indicator){
+        return indicatorMgrService.modifyIndicator(indicator);
+    }
 }

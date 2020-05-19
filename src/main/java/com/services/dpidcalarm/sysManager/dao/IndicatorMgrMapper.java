@@ -26,4 +26,18 @@ public interface IndicatorMgrMapper {
      * @return List<IndicatorAttr>
      */
     List<IndicatorAttr> queryIndicatorAttr();
+
+    /**
+     * 添加指标信息
+     * @param indicator
+     * @return
+     */
+    int addIndicator(Indicator indicator);
+
+    /**
+     * 修改指标信息
+     * @param indicator
+     * @return
+     */
+    int modifyIndicator(Indicator indicator);
 }

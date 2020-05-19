@@ -26,4 +26,12 @@ public class IndicatorMgrService {
     public List<IndicatorAttr> queryIndicatorAttr() {
         return indicatorMgrMapper.queryIndicatorAttr();
     }
+
+    public int addIndicator(Indicator indicator) {
+        return indicatorMgrMapper.addIndicator(indicator);
+    }
+
+    public int modifyIndicator(Indicator indicator) {
+        return indicatorMgrMapper.modifyIndicator(indicator);
+    }
 }

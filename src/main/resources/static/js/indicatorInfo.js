@@ -13,7 +13,7 @@ var vue = new Vue({
             if("add" == window.parent.vue.$data.operateType){
                 url = 'indicatorMgr/addIndicator';
             }else{
-                url = 'role/modifyIndicator';
+                url = 'indicatorMgr/modifyIndicator';
             }
             let param = JSON.stringify(this.indicatorInfo);
             ajaxUtil.ajaxQueryJson(url,param).then(res=>{
