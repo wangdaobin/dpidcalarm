@@ -1,6 +1,7 @@
 package com.services.dpidcalarm.collect.job;
 
 import com.services.dpidcalarm.utils.MyDateUtils;
+import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -97,7 +98,7 @@ public class CollectScoreByForm
             //开始日期
             NameValuePair startDay_nvp = new BasicNameValuePair("startDay", startDay);
             paramlist.add(startDay_nvp);
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(paramlist);
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(paramlist,Consts.UTF_8);
             //设置参数
             post.setEntity(entity);
             //执行post请求
@@ -121,8 +122,8 @@ public class CollectScoreByForm
             JSONObject json = new JSONObject(jsonStrResult);
             //公司
             String com = json.getString("com");
-            //表
-            String table = json.getString("table");
+            //表(积分电量没有表的概念）
+            // String table = json.getString("table");
             //开始时间
             String startDay = json.getString("startDay");
             long currentDayMillis = MyDateUtils.getCurrentDayMillis(startDay);
@@ -145,7 +146,7 @@ public class CollectScoreByForm
             }
 
         }catch (Exception e){
-
+            this.logger.error("获取得分出错：",e);
         }
         return -1;
     }

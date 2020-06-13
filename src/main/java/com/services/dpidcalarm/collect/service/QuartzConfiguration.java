@@ -67,7 +67,7 @@ public class QuartzConfiguration {
         tigger.setCronExpression("0 0/5 * * * ? ");
 
         //cron表达式，每整5秒执行一次
-        //tigger.setCronExpression("*/5 * * * * ?");
+        // tigger.setCronExpression("*/5 * * * * ?");
         logger.info("cron表达式，每整5钟执行一次");
         tigger.setName("reptilianTrigger");
         return tigger;

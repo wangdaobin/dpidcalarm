@@ -84,6 +84,11 @@ public class QuartzTask {
     //变电站遥测得分
     BDZYCSXScore bdzycsxScore = new BDZYCSXScore();
 
+    //昨日指标的今日采集时间（积分电量和事故分闸，都是今天算昨日的指标） 默认为9
+    int collectHour = 9;
+
+    //开关、遥测遥信、积分电量、事故分闸指标数据获取开始
+    CollectScoreByForm collectScoreByForm = new CollectScoreByForm();
     /**
      * 业务逻辑
      */
@@ -99,36 +104,28 @@ public class QuartzTask {
         logger.info("参数-短信平台地址：" + smsAddress);
         logger.info("参数-短信平台账号：" + smsUser);
         logger.info("参数-短信平台密码：" + smsPassword);
-        int collectHour = Integer.parseInt(collectionTime);
-        logger.info("参数-昨日的统计的指标，今天几点采集：" + collectHour);
+        if(collectionTime!=null && collectionTime.length()>0){
+            collectHour = Integer.parseInt(collectionTime);
+            logger.info("参数-昨日的统计的指标，今天几点采集：" + collectHour);
+        }
+
 
 
         logger.info("供电公司中文名称：" + comName);
         logger.info("供电公司中文简称：" + comShortName);
         logger.info("供电公司编号：" + comNo);
 
-
+        //url
+        String scoreURL = "http://10.55.6.114/analysis/Daycord_j.gc";
+        //开始日期为当前时期
+        String currentDay = MyDateUtils.getCurrentDayStr();
 
         //获取上次的指标结果
         indicatorUtils.setListIndicatorOld(indicatorDataDao.queryAllIndicator());
 
 
-        //变电站遥测刷新率
-        this.dealBDZSXScore();
-        //状态估计合格率
-        this.dealZTGJScore();
 
 
-
-
-
-
-
-        logger.info("开关、遥测遥信、积分电量指标数据获取开始：");
-        CollectScoreByForm collectScoreByForm = new CollectScoreByForm();
-        //**************1、登录*****************//
-        // 内部有写死的url，所有的指标登录都是一样的，本部分只做测试，后续从数据库读
-        collectScoreByForm.login(null,null,null);
 
         /**
          * 得分： 开关和遥测遥信只是表名不一样。 积分电量url和开始日期（昨天）和com（中文字符，不一样）
@@ -139,13 +136,50 @@ public class QuartzTask {
          * @return
          * @throws IOException
          */
+        logger.info("开关、遥测遥信、积分电量指标数据获取开始：");
+        //**************1、登录*****************//
+        // 内部有写死的url，所有的指标登录都是一样的，本部分只做测试，后续从数据库读
+        collectScoreByForm.login(null,null,null);
 
-        //url
-        String scoreURL = "http://10.55.6.114/analysis/Daycord_j.gc";
-        //开始日期为当前时期
-        String currentDay = MyDateUtils.getCurrentDayStr();
+        //4处理积分电量
+        this.dealJFDLScore();
 
 
+
+        //2开关指标
+        this.dealKGZBScore(scoreURL,currentDay);
+        //3遥测遥信指标
+        this.dealYCYXScore(scoreURL,currentDay);
+
+        //1 变电站遥测刷新率
+        this.dealBDZSXScore();
+        //6 状态估计合格率
+        this.dealZTGJScore();
+
+        //更新指标工具对象
+        indicatorUtils.setListIndicatorNew(indicatorDataDao.queryAllIndicator());
+        /**
+         * 这两个指标都是今天才能取到昨天统计的值，所以都定义为每天8之后点取指标。
+         * 如果没取到则继续去，如果取到了，则更新最新记录、历史记录、以及历史记录对应的详情，
+         * 下次5分钟时判断当天是否已经有值
+         */
+        //4处理积分电量
+        this.dealJFDLScore();
+
+        //5处理事故分闸
+        this.dealSGFZScore();;
+
+
+        //更新指标工具对象
+        indicatorUtils.setListIndicatorNew(indicatorDataDao.queryAllIndicator());
+        //执行发送短信流程
+        this.sendMsg(indicatorUtils);
+    }
+
+    /**
+     * 处理 2 开关指标得分
+     */
+    private void dealKGZBScore(String scoreURL, String currentDay) {
         try {
             //*************2、开关指标得分*************//
             //开关表名
@@ -175,9 +209,13 @@ public class QuartzTask {
             logger.error(e.getMessage());
             e.getMessage();
         }
+    }
 
 
-
+    /**
+     * 处理 3 遥测遥信得分
+     */
+    private void dealYCYXScore(String scoreURL, String currentDay) {
         try {
             //*************3、遥测遥信得分*************
             //遥测遥信表名
@@ -208,59 +246,16 @@ public class QuartzTask {
             logger.error("遥测遥信出错" + e.getMessage());
             e.getMessage();
         }
+    }
 
 
-
-
-
-
-
-        //更新指标工具对象
-        indicatorUtils.setListIndicatorNew(indicatorDataDao.queryAllIndicator());
-        /**
-         * 这两个指标都是今天才能取到昨天统计的值，所以都定义为每天8之后点取指标。
-         * 如果没取到则继续去，如果取到了，则更新最新记录、历史记录、以及历史记录对应的详情，
-         * 下次5分钟时判断当天是否已经有值
-         */
-
+    /**
+     * 处理 5 事故分闸得分  昨日的值
+     */
+    private void dealSGFZScore() {
         //如果最后时间不是今天，并且当前时间是collectionTime点以后
         Calendar calendar  = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if(!indicatorUtils.getIndicatorIsUpdateToday(4) && hour>collectHour){
-            try {
-                //*************4、积分电量得分  昨日的值*************
-                String scoreURL_jfdl = "http://10.55.6.114/analysis/TmrJFMonthCord_j.gc";
-                // String compony_jfdl = "南岸分公司";
-                // compony_jfdl = URLEncoder.encode(compony_jfdl,"UTF-8");
-                // logger.info("compony_jfdl：" + compony_jfdl);
-                //String compony_jfdl = "%e5%8d%97%e5%b2%b8%e5%88%86%e5%85%ac%e5%8f%b8";
-                //开始日期为昨日时间
-                String yesterdayStr = MyDateUtils.getYesterdayDayStr();
-                String resultJSON_jfdl = collectScoreByForm.getCurrentScoreJSON(scoreURL_jfdl,comName,null,yesterdayStr);
-                // System.out.println("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
-                logger.info("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
-                double scoreJFDL = collectScoreByForm.dealcurrentScoreJSON(resultJSON_jfdl);
-                logger.info("积分电量得分：" + scoreJFDL);
-                if(scoreJFDL>0){
-                    /********存储历史指标*********/
-                    //新建历史对象
-                    IndicatorData  indicatorData = new IndicatorData();
-                    //设置指标id、值、时间
-                    indicatorData.setIdcID(4);
-                    indicatorData.setIdcValue((float)scoreJFDL);
-                    indicatorData.setCollectTime(new Date(currentTime));
-                    //插入历史指标
-                    int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
-                    //更新实时
-                    indicatorDataDao.updateIndicatorRtData(4,(float)scoreJFDL , new Date(currentTime));
-                }
-
-            }catch (Exception e){
-                logger.error("积分电量出错" + e.getMessage());
-                e.getMessage();
-            }
-        }
-
 
 
         if(!indicatorUtils.getIndicatorIsUpdateToday(5) && hour>collectHour){
@@ -295,18 +290,53 @@ public class QuartzTask {
                 e.getMessage();
             }
         }
-
-
-
-        //更新指标工具对象
-        indicatorUtils.setListIndicatorNew(indicatorDataDao.queryAllIndicator());
-
-        //执行发送短信流程
-
-        this.sendMsg(indicatorUtils);
-
     }
 
+    /**
+     * 处理 4积分电量得分  昨日的值
+     */
+    private void dealJFDLScore() {
+        Calendar calendar  = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if(!indicatorUtils.getIndicatorIsUpdateToday(4) && hour>collectHour){
+            try {
+                //*************4、积分电量得分  昨日的值*************
+                String scoreURL_jfdl = "http://10.55.6.114/analysis/TmrJFMonthCord_j.gc";
+                // String compony_jfdl = "南岸分公司";
+                // compony_jfdl = URLEncoder.encode(compony_jfdl,"UTF-8");
+                // logger.info("compony_jfdl：" + compony_jfdl);
+                //String compony_jfdl = "%e5%8d%97%e5%b2%b8%e5%88%86%e5%85%ac%e5%8f%b8";
+                // URLEncoder.encode(compony_jfdl, "utf-8");
+                if("市南分公司".equals(comName)){
+                    comName = "南岸分公司";
+                }
+                //开始日期为昨日时间
+                String yesterdayStr = MyDateUtils.getYesterdayDayStr();
+                String resultJSON_jfdl = collectScoreByForm.getCurrentScoreJSON(scoreURL_jfdl,comName,null,yesterdayStr);
+                // System.out.println("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
+                logger.info("积分电量的获取结果：resultJSON："+resultJSON_jfdl);
+                double scoreJFDL = collectScoreByForm.dealcurrentScoreJSON(resultJSON_jfdl);
+                logger.info("积分电量得分：" + scoreJFDL);
+                if(scoreJFDL>0){
+                    /********存储历史指标*********/
+                    //新建历史对象
+                    IndicatorData  indicatorData = new IndicatorData();
+                    //设置指标id、值、时间
+                    indicatorData.setIdcID(4);
+                    indicatorData.setIdcValue((float)scoreJFDL);
+                    indicatorData.setCollectTime(new Date(currentTime));
+                    //插入历史指标
+                    int id1  = indicatorDataDao.insertIndicatorHisData(indicatorData);
+                    //更新实时
+                    indicatorDataDao.updateIndicatorRtData(4,(float)scoreJFDL , new Date(currentTime));
+                }
+
+            }catch (Exception e){
+                logger.error("积分电量出错" + e.getMessage());
+                e.getMessage();
+            }
+        }
+    }
 
     /**
      * 处理状态估计合格率
@@ -336,6 +366,10 @@ public class QuartzTask {
                 //更新实时
                 indicatorDataDao.updateIndicatorRtData(6,(float)scoreZTGJ , new Date(currentTime));
             }
+
+            //详情 获取
+            collectData.printZTGJError(comShortName);
+
         }catch (Exception e){
             logger.error(e.getMessage());
             e.getMessage();
@@ -431,8 +465,8 @@ public class QuartzTask {
             float indicatorValueOld = indicatorUtils.getIndicatorLastValue(indicatorID,0);
             //指标新值
             float indicatorValueNew = indicatorUtils.getIndicatorLastValue(indicatorID,1);
-            //最后更新值不出错（-1），并且小于限值，而且本次指标和上次指标值不一致，并且发送次数小于1
-            if(indicatorValueNew!=-1 && indicatorValueNew < limitValue && 1==sendFlag && sendMsgCount<1 && (Math.abs(indicatorValueNew-indicatorValueOld)>0.001)){
+            //最后更新值不出错（-1），并且小于限值，而且本次指标和上次指标值不一致
+            if(indicatorValueNew!=-1 && indicatorValueNew < limitValue && 1==sendFlag && (Math.abs(indicatorValueNew-indicatorValueOld)>0.001)){
                 //发送短息
                 logger.info(name + "得分:" + indicatorValueNew + "，小于限值" + limitValue + "发送短息到" + phone);
                 //测试

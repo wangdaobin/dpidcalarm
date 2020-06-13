@@ -72,6 +72,10 @@ public class CollectDataBDZYCSX
     public String getDetailsHtml(String url, String param1, String param2, String param3 ) {
         try{
             //String url = "http://10.55.6.114/check/WarnReport_WarnReport.gc?tableType=city&field=南岸&dataType=day&dianshu=5";
+            // if("市南".equals(param1)){
+            //     //模型改名了，但是指标程序内“南岸”是写死的，未改名；
+            //     param1 = "南岸";
+            // }
             HttpGet get = new HttpGet("http://10.55.6.114/check/WarnReport_WarnReport.gc?tableType=city&field=" + param1 +"&dataType=day&dianshu=5");
             return EntityUtils.toString(this.client.execute(get).getEntity());
         }catch (Exception e){

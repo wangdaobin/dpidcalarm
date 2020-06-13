@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -91,6 +92,65 @@ public class CollectDataZTGJ {
         return svgResutl;
     }
 
+    /**
+     *
+     * @param
+     * @return
+     * @throws IOException
+     */
+    public String getNananTestError(String shortName) {
+        try {
+            String result = null;
+            HttpPost post = new HttpPost("http://10.55.1.99:8000/svg/file/SvgTableGraphServlet?timeStamp=" + (new Date()).getTime());
+            String param = "<root><TableData table_id='2064' app_id='201100' HisDataType='1081085952' col_name_list='dv_name,st_id,descr,measure_type,value_,value_pre,value_res,value_r,base' sql=\"select dv_name,st_id,descr,measure_type,value_,value_pre,value_res,value_r,base from pas_allmeasure where descr LIKE '%" +
+                    shortName +
+                    "%' \" finish_num='0' record_num='0' value='' m_SQL=\" f3 LIKE '%" +
+                    shortName +
+                    "%' \" m_WhereFieldList_string=\"f3\" m_FieldInfoVec_string=\"0,f0,1,-1,-1,-1,-1;1,f1,2,-1,-1,-1,-1;2,f2,4,-1,-1,-1,-1;3,f3,5,-1,-1,-1,-1;4,f4,6,-1,-1,-1,-1;5,f5,7,-1,-1,-1,-1;6,f6,8,-1,-1,-1,-1;7,f7,9,-1,-1,-1,-1;8,f8,12,-1,-1,-1,-1;9,f9,10,-1,-1,-1,-1\" m_StatusQueryVec_string=\"\"/></root>";
+            //String param = "%3Croot%3E%3CTableData+table_id%3D%272064%27+app_id%3D%27201100%27+HisDataType%3D%271081085952%27+col_name_list%3D%27dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase%27+sql%3D%22select+dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase+from+pas_allmeasure+where+descr+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+finish_num%3D%270%27+record_num%3D%270%27+value%3D%27%27+m_SQL%3D%22+f3+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+m_WhereFieldList_string%3D%22f3%22+m_FieldInfoVec_string%3D%220%2Cf0%2C1%2C-1%2C-1%2C-1%2C-1%3B1%2Cf1%2C2%2C-1%2C-1%2C-1%2C-1%3B2%2Cf2%2C4%2C-1%2C-1%2C-1%2C-1%3B3%2Cf3%2C5%2C-1%2C-1%2C-1%2C-1%3B4%2Cf4%2C6%2C-1%2C-1%2C-1%2C-1%3B5%2Cf5%2C7%2C-1%2C-1%2C-1%2C-1%3B6%2Cf6%2C8%2C-1%2C-1%2C-1%2C-1%3B7%2Cf7%2C9%2C-1%2C-1%2C-1%2C-1%3B8%2Cf8%2C12%2C-1%2C-1%2C-1%2C-1%3B9%2Cf9%2C10%2C-1%2C-1%2C-1%2C-1%22+m_StatusQueryVec_string%3D%22%22%2F%3E%3C%2Froot%3E";
+
+            HttpEntity requestEntity = new StringEntity(URLEncoder.encode(param, "utf-8"));
+            post.setEntity(requestEntity);
+            HttpResponse response = this.client.execute(post);
+            String svgResutl = EntityUtils.toString(response.getEntity());
+            this.logger.info("getNananTestError状态估计合格率--结果1：" + svgResutl);
+            InputStream is = response.getEntity().getContent();
+            result = SvgUtil.svgzHandler(is, "svg");
+            this.logger.info("getNananTestError状态估计合格率--结果2：" + result);
+            List<ErrorResult> thisErrs = SvgUtil.getErrorResult(result);
+            StringBuilder sb = new StringBuilder();
+            for (ErrorResult er : thisErrs) {
+                sb.append(";设备名称").append(er.getSbName()).append(",估计值").append(er.getGjValue()).append(",量测值").append(er.getLcValue());
+            }
+            this.logger.info("getNananTestError状态估计合格率--出错详情整理：" + sb.toString());
+            return result;
+        }catch (Exception e) {
+            this.logger.info("getNananTestError状态估计合格率--出错：" + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    // //获取状态估计错误详情
+    // public String getSvgImageForKHZBError(String url)
+    //         throws IOException
+    // {
+    //     String result = null;
+    //     url = "http://10.55.1.99:8000/svg/file/SvgTableGraphServlet?timeStamp=" + (new Date()).getTime();
+    //
+    //     HttpPost post = new HttpPost(url);
+    //     String param = "%3Croot%3E%3CTableData+table_id%3D%272064%27+app_id%3D%27201100%27+HisDataType%3D%271081085952%27+col_name_list%3D%27dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase%27+sql%3D%22select+dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase+from+pas_allmeasure+where+descr+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+finish_num%3D%270%27+record_num%3D%270%27+value%3D%27%27+m_SQL%3D%22+f3+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+m_WhereFieldList_string%3D%22f3%22+m_FieldInfoVec_string%3D%220%2Cf0%2C1%2C-1%2C-1%2C-1%2C-1%3B1%2Cf1%2C2%2C-1%2C-1%2C-1%2C-1%3B2%2Cf2%2C4%2C-1%2C-1%2C-1%2C-1%3B3%2Cf3%2C5%2C-1%2C-1%2C-1%2C-1%3B4%2Cf4%2C6%2C-1%2C-1%2C-1%2C-1%3B5%2Cf5%2C7%2C-1%2C-1%2C-1%2C-1%3B6%2Cf6%2C8%2C-1%2C-1%2C-1%2C-1%3B7%2Cf7%2C9%2C-1%2C-1%2C-1%2C-1%3B8%2Cf8%2C12%2C-1%2C-1%2C-1%2C-1%3B9%2Cf9%2C10%2C-1%2C-1%2C-1%2C-1%22+m_StatusQueryVec_string%3D%22%22%2F%3E%3C%2Froot%3E";
+    //     HttpEntity requestEntity = new StringEntity(param);
+    //     post.setEntity(requestEntity);
+    //     HttpResponse response = client.execute(post);
+    //     // InputStream is = response.getEntity().getContent();
+    //     // result = SvgUtil.svgzHandler(is, "svg");
+    //     String svgResutl = EntityUtils.toString(response.getEntity());
+    //     this.logger.info("状态估计合格率获取--原始结果：" + svgResutl);
+    //     return result;
+    // }
+
 
 
 
@@ -107,19 +167,19 @@ public class CollectDataZTGJ {
         }
         //获取厂站合格率
         float val = SvgUtil.getQulifyRateFloat(svgResult,comShortName);
-        logger.info(new StringBuilder().append("南岸 状态估计合格率 val:-------").append(val).toString());
+        logger.info(new StringBuilder().append(comShortName + "状态估计合格率 val:-------").append(val).toString());
         return val;
     }
 
 
-    public void printZTGJError(){
+    public void printZTGJError(String comShortName){
         //详细错误点数
-        String ersStr = this.getNananTestError();
+        String ersStr = this.getNananTestError(comShortName);
         List<ErrorResult> errorResultList = SvgUtil.getErrorResult(ersStr);
 
         for (ErrorResult er1 : errorResultList) {
             logger.info(
-                    new StringBuilder().append("错误点数详情：设备名称：")
+                    new StringBuilder().append("状态估计错误点数详情：设备名称：")
                             .append(er1.getSbName())
                             .append(",估计值：")
                             .append(er1.getGjValue())
@@ -129,32 +189,6 @@ public class CollectDataZTGJ {
         }
     }
 
-    /**
-     *
-     * @param
-     * @return
-     * @throws IOException
-     */
-    public String getNananTestError() {
-        try {
-            String result = null;
-            HttpPost post = new HttpPost("http://10.55.1.99:8000/svg/file/SvgTableGraphServlet?timeStamp=" + (new Date()).getTime());
-            String param = "%3Croot%3E%3CTableData+table_id%3D%272064%27+app_id%3D%27201100%27+HisDataType%3D%271081085952%27+col_name_list%3D%27dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase%27+sql%3D%22select+dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase+from+pas_allmeasure+where+descr+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+finish_num%3D%270%27+record_num%3D%270%27+value%3D%27%27+m_SQL%3D%22+f3+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+m_WhereFieldList_string%3D%22f3%22+m_FieldInfoVec_string%3D%220%2Cf0%2C1%2C-1%2C-1%2C-1%2C-1%3B1%2Cf1%2C2%2C-1%2C-1%2C-1%2C-1%3B2%2Cf2%2C4%2C-1%2C-1%2C-1%2C-1%3B3%2Cf3%2C5%2C-1%2C-1%2C-1%2C-1%3B4%2Cf4%2C6%2C-1%2C-1%2C-1%2C-1%3B5%2Cf5%2C7%2C-1%2C-1%2C-1%2C-1%3B6%2Cf6%2C8%2C-1%2C-1%2C-1%2C-1%3B7%2Cf7%2C9%2C-1%2C-1%2C-1%2C-1%3B8%2Cf8%2C12%2C-1%2C-1%2C-1%2C-1%3B9%2Cf9%2C10%2C-1%2C-1%2C-1%2C-1%22+m_StatusQueryVec_string%3D%22%22%2F%3E%3C%2Froot%3E";
-            HttpEntity requestEntity = new StringEntity("%3Croot%3E%3CTableData+table_id%3D%272064%27+app_id%3D%27201100%27+HisDataType%3D%271081085952%27+col_name_list%3D%27dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase%27+sql%3D%22select+dv_name%2Cst_id%2Cdescr%2Cmeasure_type%2Cvalue_%2Cvalue_pre%2Cvalue_res%2Cvalue_r%2Cbase+from+pas_allmeasure+where+descr+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+finish_num%3D%270%27+record_num%3D%270%27+value%3D%27%27+m_SQL%3D%22+f3+LIKE+%27%25%E5%8D%97%E5%B2%B8%25%27+%22+m_WhereFieldList_string%3D%22f3%22+m_FieldInfoVec_string%3D%220%2Cf0%2C1%2C-1%2C-1%2C-1%2C-1%3B1%2Cf1%2C2%2C-1%2C-1%2C-1%2C-1%3B2%2Cf2%2C4%2C-1%2C-1%2C-1%2C-1%3B3%2Cf3%2C5%2C-1%2C-1%2C-1%2C-1%3B4%2Cf4%2C6%2C-1%2C-1%2C-1%2C-1%3B5%2Cf5%2C7%2C-1%2C-1%2C-1%2C-1%3B6%2Cf6%2C8%2C-1%2C-1%2C-1%2C-1%3B7%2Cf7%2C9%2C-1%2C-1%2C-1%2C-1%3B8%2Cf8%2C12%2C-1%2C-1%2C-1%2C-1%3B9%2Cf9%2C10%2C-1%2C-1%2C-1%2C-1%22+m_StatusQueryVec_string%3D%22%22%2F%3E%3C%2Froot%3E");
-            post.setEntity(requestEntity);
-            HttpResponse response = this.client.execute(post);
-            String svgResutl = EntityUtils.toString(response.getEntity());
-            this.logger.info("getNananTestError状态估计合格率--结果1：" + svgResutl);
-            InputStream is = response.getEntity().getContent();
-            result = SvgUtil.svgzHandler(is, "svg");
-            this.logger.info("getNananTestError状态估计合格率--结果2：" + result);
-            return result;
-        }catch (Exception e) {
-            this.logger.info("getNananTestError状态估计合格率--出错：" + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
 
-    }
 
 }

@@ -170,7 +170,9 @@ public class SvgUtil
         if (matcher.find()) {
             content = matcher.group(1);
         }
-        if (content == null) return erList;
+        if (content == null) {
+            return erList;
+        }
         String[] datas = content.split(",");
         for (String s : datas) {
             String[] items = s.split("@");
