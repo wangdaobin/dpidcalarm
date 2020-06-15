@@ -78,7 +78,11 @@
                     </div>
                     <hr style="height:1px;border:none;border-top:1px solid #555555;width: 90%;margin-left: 5%" />
                     <div class="panel-body">
-
+                        <ul class="message-log">
+                            <li v-for="(messageLog, i) in messageLogs" >
+                                <span>{{i+1}}</span>{{messageLog.content}}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

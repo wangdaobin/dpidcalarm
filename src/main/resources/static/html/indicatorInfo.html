@@ -14,14 +14,17 @@
     <div class="add-role-info" id="userInfo">
         <div style="height: 40px;font-weight: bold;font-size: 18px;text-align: center">指标信息</div>
         <el-form label-position="right" label-width="80px">
+            <el-form-item label="id" v-show="false">
+                <el-input v-model="indicatorInfo.id" style="width: 250px" placeholder="id"></el-input>
+            </el-form-item>
             <el-form-item label="指标编码">
-                <el-input v-model="indicatorInfo.code" style="width: 250px" placeholder="编码"></el-input>
+                <el-input v-model="indicatorInfo.type" style="width: 250px" placeholder="编码"></el-input>
             </el-form-item>
             <el-form-item label="指标名称">
                 <el-input v-model="indicatorInfo.name" style="width: 250px" placeholder="名称"></el-input>
             </el-form-item>
-            <el-form-item label="采集周期">
-                <el-input v-model="indicatorInfo.cycle" style="width: 250px" placeholder="采集周期"></el-input>
+            <el-form-item label="限值">
+                <el-input v-model="indicatorInfo.limitValue" style="width: 250px" placeholder="告警限值"></el-input>
             </el-form-item>
             <el-form-item label="备注">
                 <el-input v-model="indicatorInfo.desc" style="width: 250px" placeholder="备注"></el-input>

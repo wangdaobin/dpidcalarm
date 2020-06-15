@@ -12,35 +12,23 @@
         <div class="table-container">
             <template>
                 <el-table :data="tableData" height="100%" stripe border style="width: 100%">
-                    <el-table-column prop="parent_area_name" label="父区域" align="center">
+                    <el-table-column prop="area_name" label="区域" align="center" show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="area_name" label="区域" align="center">
+                    <el-table-column prop="cz_name" label="厂站名称" align="center" show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="station_num" label="厂站数" align="center">
+                    <el-table-column prop="sb_name" label="设备名称" align="center" show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="area_hgl" label="地区合格率" align="center">
+                    <el-table-column prop="sb_type" label="量测类型" align="center" show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="yc_num" label="遥测总数" align="center">
+                    <el-table-column prop="gj_value" label="估计值" align="center">
                     </el-table-column>
-                    <el-table-column prop="yc_hg_num" label="遥测合格数" align="center">
+                    <el-table-column prop="lc_value" label="量测值" align="center">
                     </el-table-column>
-                    <el-table-column prop="cwyx_num" label="错误遥信数" align="center">
+                    <el-table-column prop="wc_percent" label="误差百分比" align="center" width="120px">
                     </el-table-column>
-                    <el-table-column prop="dy_num" label="电压总数" align="center">
+                    <el-table-column prop="cc_value" label="值1" align="center">
                     </el-table-column>
-                    <el-table-column prop="dy_hg_num" label="电压合格数" align="center">
-                    </el-table-column>
-                    <el-table-column prop="xl_num" label="线路总数" align="center">
-                    </el-table-column>
-                    <el-table-column prop="xl_hg_num" label="线路合格数" align="center">
-                    </el-table-column>
-                    <el-table-column prop="byq_num" label="变压器总数" align="center">
-                    </el-table-column>
-                    <el-table-column prop="byq_hg_num" label="变压器合格数" align="center">
-                    </el-table-column>
-                    <el-table-column prop="fhyc_num" label="负荷遥测总数" align="center">
-                    </el-table-column>
-                    <el-table-column prop="fhyc_hg_num" label="负荷遥测合格数" align="center">
+                    <el-table-column prop="jz_value" label="值2" align="center">
                     </el-table-column>
                 </el-table>
             </template>

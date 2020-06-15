@@ -167,4 +167,26 @@ h1,h2,h3,h4,h5,h6{font-size:100%;font-family:arial,'hiragino sans gb','microsoft
     padding: 20px;
     opacity: 1;
 }
-
+.message-log{
+    height: 100%;
+    overflow: auto;
+}
+/*最近短信告警样式*/
+.message-log li {
+    cursor:pointer;
+    height: 48px;
+    line-height: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+}
+.message-log li span{
+    text-align: center;
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    background-color: #0fa081;
+    margin-right: 8px;
+}

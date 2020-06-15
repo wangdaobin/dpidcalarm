@@ -45,4 +45,9 @@ public class IndicatorMgrController {
     public int modifyIndicator(@RequestBody Indicator indicator){
         return indicatorMgrService.modifyIndicator(indicator);
     }
+    @RequestMapping("deleteIndicator")
+    @ResponseBody
+    public int deleteIndicator(String id){
+        return indicatorMgrService.deleteIndicator(id);
+    }
 }

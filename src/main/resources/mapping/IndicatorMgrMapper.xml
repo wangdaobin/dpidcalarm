@@ -2,17 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.services.dpidcalarm.sysManager.dao.IndicatorMgrMapper" >
     <select id="queryAllIndicator" resultType="com.services.dpidcalarm.sysManager.bean.Indicator">
-        select * from indicator_type
+        select * from indicator
     </select>
     <select id="queryIndicatorAttr" resultType="com.services.dpidcalarm.sysManager.bean.IndicatorAttr">
         select a.*,b.name idcName from indicator_attr a left join indicator_type b on a.idc_code=b.code
     </select>
     <!-- 插入指标 -->
     <insert id="addIndicator" parameterType="com.services.dpidcalarm.sysManager.bean.Indicator">
-        insert into indicator_type (`code`,`name`,`cycle`,`desc`) values (#{code},#{name},#{cycle},#{desc})
+        <!--insert into indicator_type (`code`,`name`,`cycle`,`desc`) values (#{code},#{name},#{cycle},#{desc})-->
+        insert into indicator (`type`,`name`,`limit_value`,`desc`) values (#{type},#{name},#{limitValue},#{desc})
     </insert>
     <!-- 更新指标 -->
     <update id="modifyIndicator" parameterType="com.services.dpidcalarm.sysManager.bean.Indicator">
-        update indicator_type set `name` = #{name},`cycle`=#{cycle},`desc`=#{desc} where `code`= #{code}
+        <!--update indicator_type set `name` = #{name},`cycle`=#{cycle},`desc`=#{desc} where `code`= #{code}-->
+        update indicator set `type`=#{type}, `name` = #{name},`limit_value`=#{limitValue},`desc`=#{desc} where `id`= #{id}
     </update>
+    <delete id="deleteIndicator" parameterType="String">
+        delete from indicator where id = #{id}
+    </delete>
 </mapper>

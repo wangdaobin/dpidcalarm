@@ -40,4 +40,6 @@ public interface IndicatorMgrMapper {
      * @return
      */
     int modifyIndicator(Indicator indicator);
+
+    int deleteIndicator(String id);
 }

@@ -47,6 +47,8 @@ jQuery(document).ready(function() {
 var vue = new Vue({
     el: "#viewport",
     data: {
+        timer:null,
+        messageLogs:[],
         selectedNav:'home',
         currentSrc:'index.html',
         userInfo:{},
@@ -161,6 +163,7 @@ var vue = new Vue({
     },
     mounted: function() {
         this.queryCurrentUser();
+        this.queryMessageLogsNew();
     },
     methods: {
         openPage(e){
@@ -209,6 +212,22 @@ var vue = new Vue({
                 let layer = layui.layer;
                 layer.close(this_.layerIndex)
             });
+        },
+        /*查询最新的告警短息*/
+        queryMessageLogsNew(){
+            let url = 'messageLog/queryMsgLogNew';
+            let param = {
+                size:10
+            };
+            ajaxUtil.ajaxQuery(url,param).then(res=>{
+                this.messageLogs = res;
+                let this_ = this;
+                this.timer = setTimeout(function () {
+                    this_.queryMessageLogsNew();
+                },1000*60)
+            }).catch(err =>{
+                console.error(err);
+            })
         }
     }
 });

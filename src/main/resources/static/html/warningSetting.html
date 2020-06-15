@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>不合格率统计</title>
+    <title>短信告警规则</title>
     <link rel="stylesheet" type="text/css" href="../plugins/layui/css/layui.css">
     <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element.css">
     <link rel="stylesheet" type="text/css" href="../plugins/vue/element/element-ext.css">
@@ -11,7 +11,7 @@
 <body>
 <div class="container" id="container">
     <el-tabs type="border-card" style="height: calc(100% - 2px);position: relative">
-        <el-tab-pane label="单独合格率">
+        <el-tab-pane label="告警规则设置">
             <div class="container-left">
                 <div style="position:absolute;top: 10px; left:10px;width: 100%;height: 40px;line-height: 40px;font-size: 18px;font-weight: bold">监控设置</div>
                 <template>
@@ -19,28 +19,16 @@
                         <el-tab-pane label="工作日">
                             <div class="form-container">
                                 <el-form :inline="true" :model="form_workday" label-position="right">
-                                    <el-form-item label="报警时段：">
+                                    <el-form-item label="指标名称：">
                                         <template>
-                                            <el-time-select
-                                                    v-model="form_workday.startTime"
-                                                    :picker-options="{
-                                                    start: '00:00',
-                                                    step: '00:05',
-                                                    end: '23:55'
-                                                }"
-                                                    placeholder="起始时间">
-                                            </el-time-select>
-                                            <label>&nbsp;至&nbsp;</label>
-                                            <el-time-select
-                                                    arrow-control
-                                                    v-model="form_workday.endTime"
-                                                    :picker-options="{
-                                                    start: '00:00',
-                                                    step: '00:05',
-                                                    end: '23:55'
-                                                }"
-                                                    placeholder="终止时间">
-                                            </el-time-select>
+                                            <el-select v-model="form_workday.nightRecUser" placeholder="请选择" style="width: 220px">
+                                                <el-option
+                                                        v-for="item in option_users"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                </el-option>
+                                            </el-select>
                                         </template>
                                     </el-form-item>
                                     <el-form-item label="报警规则：" style="margin-left:100px ">
@@ -139,6 +127,7 @@
                                 </el-form>
                             </div>
                         </el-tab-pane>
+                        <!--
                         <el-tab-pane label="周末">
                             <div class="form-container">
                                 <el-form :inline="true" :model="form_workday" label-position="right">
@@ -262,6 +251,7 @@
                                 </el-form>
                             </div>
                         </el-tab-pane>
+                        -->
                     </el-tabs>
                 </template>
             </div>
@@ -297,10 +287,12 @@
                 </div>
             </div>
         </el-tab-pane>
+        <!--
         <el-tab-pane label="业务数据传输可用率">
             <div class="container-left"></div>
             <div class="container-right"></div>
         </el-tab-pane>
+        -->
     </el-tabs>
 </div>
 <script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>

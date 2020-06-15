@@ -32,5 +32,6 @@
         <mapper resource="mapping/DataQueryMapper.xml"/>
         <mapper resource="mapping/IndicatorMgrMapper.xml"/>
         <mapper resource="mapping/RoleMapper.xml"/>
+        <mapper resource="mapping/MessageLogMapper.xml"/>
     </mappers>
 </configuration>

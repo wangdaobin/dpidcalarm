@@ -34,4 +34,8 @@ public class IndicatorMgrService {
     public int modifyIndicator(Indicator indicator) {
         return indicatorMgrMapper.modifyIndicator(indicator);
     }
+
+    public int deleteIndicator(String id) {
+        return indicatorMgrMapper.deleteIndicator(id);
+    }
 }

@@ -9,6 +9,7 @@
         select a.id id,b.name,b.type,a.idc_value value,a.collect_time time
           from indicator_data a left join indicator b on a.idc_id=b.id
           where b.type=#{type} and a.collect_time between #{begin} and #{end}
+          ORDER BY time desc
     </select>
 
     <select id="queryDetail" resultType="java.util.HashMap">

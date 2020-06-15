@@ -64,7 +64,7 @@ var vue = new Vue({
                         id:rowData.id
                     };
                     ajaxUtil.ajaxQuery(url,param).then(res=>{
-                        this_.queryRoles();
+                        this_.queryIndicator();
                         if(res != 0){
                             layer.msg("删除成功！")
                         }else{
@@ -104,7 +104,7 @@ var vue = new Vue({
                         id:rowData.id
                     };
                     ajaxUtil.ajaxQuery(url,param).then(res=>{
-                        this_.queryRoles();
+                        this_.queryIndicatorAttr();
                         if(res != 0){
                             layer.msg("删除成功！")
                         }else{

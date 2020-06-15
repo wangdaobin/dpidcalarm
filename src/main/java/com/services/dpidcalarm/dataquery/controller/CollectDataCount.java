@@ -25,8 +25,6 @@ public class CollectDataCount {
     @ResponseBody
     public String queryDataCountSingle(String begin,String end){
         try{
-            System.out.println(begin);
-            System.out.println(end);
             return "success";
         }catch (Exception e){
             return e.getMessage();
@@ -82,7 +80,7 @@ public class CollectDataCount {
             }else if(1005 == type){
                 tableName = "indicator_details_sgfz";
             }else if(1006 == type){
-                tableName = "indicator_details_ztgj";
+                tableName = "indicator_details_ztgj_new";
             }
             return this.dataQueryService.queryDetail(tableName,idpId,pageNum,pageSize);
         }catch (Exception e){

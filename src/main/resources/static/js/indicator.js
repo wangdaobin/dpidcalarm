@@ -43,6 +43,7 @@ new Vue({
         this.date12 = utils.formatDate(date_tmp,'yyyy-MM-dd');
     },
     mounted(){
+        this.querydata_ztgj();
         this.querydata_bdz();
         this.querydata_kgbw();
         this.querydata_yxyc();
@@ -62,8 +63,8 @@ new Vue({
             };
             ajaxUtil.ajaxQuery(url,param).then(res=>{
                 this.tableData_ztgj = res.list;
-                this.pageNum_bdz = res.pageNum;
-                this.total_bdz = res.total;
+                this.pageNum_ztgj = res.pageNum;
+                this.total_ztgj  = res.total;
             }).catch(err =>{
                 console.error(err);
             })
@@ -174,8 +175,8 @@ new Vue({
             this.querydata_sgfz();
         },
         current_change_ztgj:function(currentPage){
-            this.pageNum_sgfz = currentPage;
-            this.querydata_sgfz();
+            this.pageNum_ztgj = currentPage;
+            this.querydata_ztgj();
         },
 
         /*导出单独合格率表*/
