@@ -33,5 +33,6 @@
         <mapper resource="mapping/IndicatorMgrMapper.xml"/>
         <mapper resource="mapping/RoleMapper.xml"/>
         <mapper resource="mapping/MessageLogMapper.xml"/>
+        <mapper resource="mapping/MessageLogSettingMapper.xml"/>
     </mappers>
 </configuration>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.services.dpidcalarm.sysManager.dao.MessageLogSettingMapper" >
+    <delete id="deleteOldSendUsers" parameterType="String">
+        delete from indicator_message_user
+        where indicator_type = #{indicatorType}
+    </delete>
+    
+    <insert id="insertSendUsers" parameterType="com.services.dpidcalarm.sysManager.bean.SendUsers">
+        insert into indicator_message_user (indicator_type,user_id) values
+        <foreach collection="users" item="user" separator=",">
+            (#{indicatorType},#{user.id})
+        </foreach>
+    </insert>
+</mapper>

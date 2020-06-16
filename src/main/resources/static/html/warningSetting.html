@@ -21,17 +21,17 @@
                                 <el-form :inline="true" :model="form_workday" label-position="right">
                                     <el-form-item label="指标名称：">
                                         <template>
-                                            <el-select v-model="form_workday.nightRecUser" placeholder="请选择" style="width: 220px">
+                                            <el-select v-model="form_workday.indicatorType" placeholder="请选择" style="width: 220px">
                                                 <el-option
-                                                        v-for="item in option_users"
-                                                        :key="item.value"
-                                                        :label="item.label"
-                                                        :value="item.value">
+                                                        v-for="item in indicators"
+                                                        :key="item.type"
+                                                        :label="item.name"
+                                                        :value="item.type">
                                                 </el-option>
                                             </el-select>
                                         </template>
                                     </el-form-item>
-                                    <el-form-item label="报警规则：" style="margin-left:100px ">
+                                    <el-form-item label="报警规则：" style="margin-left:338px ">
                                         <el-select v-model="form_workday.gzOption" placeholder="请选择" style="width: 80px">
                                             <el-option
                                                     v-for="item in options"
@@ -41,19 +41,32 @@
                                             </el-option>
                                         </el-select>
                                         <el-input v-model="form_workday.gzValue" style="width: 50px"></el-input>
-                                        <label>&nbsp;%</label>
+                                        <label>&nbsp;</label>
                                     </el-form-item>
                                     <br>
-                                    <el-form-item label="短信间隔：">
-                                        <el-input-number v-model="form_workday.messageInterval" :min="1" :max="100"></el-input-number>
-                                        <label>&nbsp;分钟</label>
+                                    <el-form-item label="告警方式：">
+                                        <el-select v-model="form_workday.sendType" placeholder="请选择" style="width: 220px">
+                                            <el-option
+                                                    v-for="item in sendTypes"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                            </el-option>
+                                        </el-select>
                                     </el-form-item>
-
-                                    <el-form-item label="采集周期：" style="margin-left: 350px">
-                                        <el-input-number v-model="form_workday.messageInterval" :min="1" :max="100"></el-input-number>
-                                        <label>&nbsp;分钟</label>
+                                    <br/>
+                                    <el-form-item label="发送时间：" v-if="form_workday.sendType == 2">
+                                        <el-time-select
+                                                v-model="form_workday.sendStartTime"
+                                                :picker-options="{
+                                                    start: '00:00',
+                                                    step: '00:05',
+                                                    end: '23:55'
+                                                }"
+                                                placeholder="发送时间">
+                                        </el-time-select>
                                     </el-form-item>
-                                    <el-form-item label="发送时段：">
+                                    <el-form-item label="发送时段：" v-if="form_workday.sendType == 1">
                                         <template>
                                             <el-time-select
                                                     v-model="form_workday.sendStartTime"
@@ -77,8 +90,16 @@
                                             </el-time-select>
                                         </template>
                                     </el-form-item>
+                                    <el-form-item label="短信间隔：" style="margin-left: 100px" v-if="form_workday.sendType == 1">
+                                        <el-input-number v-model="form_workday.messageInterval" :min="1" :max="600"></el-input-number>
+                                        <label>&nbsp;分钟</label>
+                                    </el-form-item>
                                     <br>
-                                    <el-form-item label="夜班设置：">
+                                    <el-form-item label="夜间配置：">
+                                        <el-radio v-model="form_workday.nightSetting" :label="1">启用</el-radio>
+                                        <el-radio v-model="form_workday.nightSetting" :label="0">不启用</el-radio>
+                                    </el-form-item>
+                                    <el-form-item label="夜班设置："  v-if="form_workday.nightSetting == 1">
                                         <div style="width: 1040px;height: 150px;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
                                             padding-left:80px;padding-top:20px;box-sizing: border-box " >
                                             <el-form-item label="夜班开始时间：">
@@ -103,155 +124,20 @@
                                                         placeholder="结束时间">
                                                 </el-time-select>
                                             </el-form-item>
-                                            <br>
-                                            <el-form-item label="&emsp;&emsp;接受用户：" style="margin-top: 20px;">
-                                                <el-select v-model="form_workday.nightRecUser" placeholder="请选择" style="width: 220px">
-                                                    <el-option
-                                                            v-for="item in option_users"
-                                                            :key="item.value"
-                                                            :label="item.label"
-                                                            :value="item.value">
-                                                    </el-option>
-                                                </el-select>
+                                            <br/>
+                                            <el-form-item label="&emsp;&emsp;短信间隔：" style="margin-top: 20px">
+                                                <el-input-number v-model="form_workday.nightSendInterval" :min="1" :max="600"></el-input-number>
+                                                <label>&nbsp;分钟</label>
                                             </el-form-item>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="短信模板">
-                                        <el-input type="textarea" v-model="form_workday.messageModel" :rows="8" style="width: 970px"></el-input>
-                                    </el-form-item>
-                                    <br>
-                                    <el-form-item style="float: right">
+                                    <el-form-item style="position: absolute;bottom: 10px;right: 10px">
                                         <el-button type="primary" @click="onSubmit">提交</el-button>
                                         <el-button>重置</el-button>
                                     </el-form-item>
                                 </el-form>
                             </div>
                         </el-tab-pane>
-                        <!--
-                        <el-tab-pane label="周末">
-                            <div class="form-container">
-                                <el-form :inline="true" :model="form_workday" label-position="right">
-                                    <el-form-item label="报警时段：">
-                                        <template>
-                                            <el-time-select
-                                                    v-model="form_workday.startTime"
-                                                    :picker-options="{
-                                                    start: '00:00',
-                                                    step: '00:05',
-                                                    end: '23:55'
-                                                }"
-                                                    placeholder="起始时间">
-                                            </el-time-select>
-                                            <label>&nbsp;至&nbsp;</label>
-                                            <el-time-select
-                                                    arrow-control
-                                                    v-model="form_workday.endTime"
-                                                    :picker-options="{
-                                                    start: '00:00',
-                                                    step: '00:05',
-                                                    end: '23:55'
-                                                }"
-                                                    placeholder="终止时间">
-                                            </el-time-select>
-                                        </template>
-                                    </el-form-item>
-                                    <el-form-item label="报警规则：" style="margin-left:100px ">
-                                        <el-select v-model="form_workday.gzOption" placeholder="请选择" style="width: 80px">
-                                            <el-option
-                                                    v-for="item in options"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                        <el-input v-model="form_workday.gzValue" style="width: 50px"></el-input>
-                                        <label>&nbsp;%</label>
-                                    </el-form-item>
-                                    <br>
-                                    <el-form-item label="短信间隔：">
-                                        <el-input-number v-model="form_workday.messageInterval" :min="1" :max="100"></el-input-number>
-                                        <label>&nbsp;分钟</label>
-                                    </el-form-item>
-
-                                    <el-form-item label="采集周期：" style="margin-left: 350px">
-                                        <el-input-number v-model="form_workday.messageInterval" :min="1" :max="100"></el-input-number>
-                                        <label>&nbsp;分钟</label>
-                                    </el-form-item>
-                                    <el-form-item label="发送时段：">
-                                        <template>
-                                            <el-time-select
-                                                    v-model="form_workday.sendStartTime"
-                                                    :picker-options="{
-                                                    start: '00:00',
-                                                    step: '00:05',
-                                                    end: '23:55'
-                                                }"
-                                                    placeholder="起始时间">
-                                            </el-time-select>
-                                            <label>&nbsp;至&nbsp;</label>
-                                            <el-time-select
-                                                    arrow-control
-                                                    v-model="form_workday.sendEndTime"
-                                                    :picker-options="{
-                                                    start: '00:00',
-                                                    step: '00:05',
-                                                    end: '23:55'
-                                                }"
-                                                    placeholder="终止时间">
-                                            </el-time-select>
-                                        </template>
-                                    </el-form-item>
-                                    <br>
-                                    <el-form-item label="夜班设置：">
-                                        <div style="width: 1040px;height: 150px;box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
-                                            padding-left:80px;padding-top:20px;box-sizing: border-box " >
-                                            <el-form-item label="夜班开始时间：">
-                                                <el-time-select
-                                                        v-model="form_workday.nightStartTime"
-                                                        :picker-options="{
-                                                    start: '00:00',
-                                                    step: '00:05',
-                                                    end: '23:55'
-                                                }"
-                                                        placeholder="开始时间">
-                                                </el-time-select>
-                                            </el-form-item>
-                                            <el-form-item label="夜班结束时间：" style="margin-left: 50px">
-                                                <el-time-select
-                                                        v-model="form_workday.nightEndTime"
-                                                        :picker-options="{
-                                                    start: '00:00',
-                                                    step: '00:05',
-                                                    end: '23:55'
-                                                }"
-                                                        placeholder="结束时间">
-                                                </el-time-select>
-                                            </el-form-item>
-                                            <br>
-                                            <el-form-item label="&emsp;&emsp;接受用户：" style="margin-top: 20px;">
-                                                <el-select v-model="form_workday.nightRecUser" placeholder="请选择" style="width: 220px">
-                                                    <el-option
-                                                            v-for="item in option_users"
-                                                            :key="item.value"
-                                                            :label="item.label"
-                                                            :value="item.value">
-                                                    </el-option>
-                                                </el-select>
-                                            </el-form-item>
-                                        </div>
-                                    </el-form-item>
-                                    <el-form-item label="短信模板">
-                                        <el-input type="textarea" v-model="form_workday.messageModel" :rows="8" style="width: 970px"></el-input>
-                                    </el-form-item>
-                                    <br>
-                                    <el-form-item style="float: right">
-                                        <el-button type="primary" @click="onSubmit">提交</el-button>
-                                        <el-button>重置</el-button>
-                                    </el-form-item>
-                                </el-form>
-                            </div>
-                        </el-tab-pane>
-                        -->
                     </el-tabs>
                 </template>
             </div>
@@ -260,16 +146,15 @@
                     <div style="width: 100%;height: 60px;line-height: 60px;font-size: 18px;font-weight: bold;box-sizing: border-box;padding-left:20px ">
                         <span>短信接收人</span>
                         <span style="float: right;padding-right: 20px">
-                            <el-button type="primary" icon="el-icon-success" size="small" >保存</el-button>
+                            <el-button type="primary" icon="el-icon-success" size="small" @click="saveMessageUser">保存</el-button>
                         </span>
                     </div>
                     <div style="width: 100%;height: calc(100% - 40px);">
                         <template>
                             <el-table
-                                    ref="multipleTable"
+                                    ref="usersTable"
                                     :data="tableData_users"
                                     tooltip-effect="dark"
-                                    height="100%"
                                     :show-header="false"
                                     style="width: 100%">
                                 <el-table-column
@@ -278,8 +163,7 @@
                                 </el-table-column>
                                 <el-table-column
                                         label="姓名"
-                                        prop="name"
-                                >
+                                        prop="name">
                                 </el-table-column>
                             </el-table>
                         </template>
@@ -287,12 +171,6 @@
                 </div>
             </div>
         </el-tab-pane>
-        <!--
-        <el-tab-pane label="业务数据传输可用率">
-            <div class="container-left"></div>
-            <div class="container-right"></div>
-        </el-tab-pane>
-        -->
     </el-tabs>
 </div>
 <script type="text/javascript" src="../plugins/jquery/jquery-3.3.1.min.js"></script>
