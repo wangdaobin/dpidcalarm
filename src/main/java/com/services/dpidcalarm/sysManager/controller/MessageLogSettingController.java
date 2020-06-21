@@ -2,7 +2,6 @@ package com.services.dpidcalarm.sysManager.controller;
 
 import com.services.dpidcalarm.sysManager.bean.MessageSetting;
 import com.services.dpidcalarm.sysManager.bean.SendUsers;
-import com.services.dpidcalarm.sysManager.bean.UserBean;
 import com.services.dpidcalarm.sysManager.service.MessageLogSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 短信告警设置
@@ -32,8 +33,21 @@ public class MessageLogSettingController {
     }
     @RequestMapping("saveMessageSetting")
     @ResponseBody
-    public int saveMessageSetting(MessageSetting messageSetting){
-        return 0;
+    public int saveMessageSetting(@RequestBody MessageSetting messageSetting){
+        return this.messageLogSettingService.saveMessageSetting(messageSetting);
+    }
+
+    @RequestMapping("queryMessageSetting")
+    @ResponseBody
+    public Map<String,Object> queryMessageSettingInfo(String indicatorType){
+        List<String> users = this.messageLogSettingService.queryUsers(indicatorType);
+        MessageSetting messageSetting = this.messageLogSettingService.queryMessageSetting(indicatorType);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("users",users);
+        map.put("messageSetting",messageSetting);
+
+        return map;
     }
 
 }

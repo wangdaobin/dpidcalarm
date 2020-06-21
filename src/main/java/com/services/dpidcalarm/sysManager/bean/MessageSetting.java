@@ -7,13 +7,13 @@ package com.services.dpidcalarm.sysManager.bean;
  */
 public class MessageSetting {
     private String indicatorType;
-    private String gzOption;
+    private int gzOption;
     private String gzValue;
-    private String sendType;
+    private int sendType;
     private String messageInterval;
     private String sendStartTime;
     private String sendEndTime;
-    private String nightSetting;
+    private int nightSetting;
     private String nightStartTime;
     private String nightEndTime;
     private String nightSendInterval;
@@ -26,32 +26,12 @@ public class MessageSetting {
         this.indicatorType = indicatorType;
     }
 
-    public String getGzOption() {
-        return gzOption;
-    }
-
-    public void setGzOption(String gzOption) {
-        this.gzOption = gzOption;
-    }
-
     public String getGzValue() {
         return gzValue;
     }
 
     public void setGzValue(String gzValue) {
         this.gzValue = gzValue;
-    }
-
-    public String getSendType() {
-        return sendType;
-    }
-
-    public void setSendType(String sendType) {
-        this.sendType = sendType;
-    }
-
-    public String getMessageInterval() {
-        return messageInterval;
     }
 
     public void setMessageInterval(String messageInterval) {
@@ -74,13 +54,6 @@ public class MessageSetting {
         this.sendEndTime = sendEndTime;
     }
 
-    public String getNightSetting() {
-        return nightSetting;
-    }
-
-    public void setNightSetting(String nightSetting) {
-        this.nightSetting = nightSetting;
-    }
 
     public String getNightStartTime() {
         return nightStartTime;
@@ -104,5 +77,33 @@ public class MessageSetting {
 
     public void setNightSendInterval(String nightSendInterval) {
         this.nightSendInterval = nightSendInterval;
+    }
+
+    public int getGzOption() {
+        return gzOption;
+    }
+
+    public void setGzOption(int gzOption) {
+        this.gzOption = gzOption;
+    }
+
+    public int getSendType() {
+        return sendType;
+    }
+
+    public void setSendType(int sendType) {
+        this.sendType = sendType;
+    }
+
+    public String getMessageInterval() {
+        return messageInterval;
+    }
+
+    public int getNightSetting() {
+        return nightSetting;
+    }
+
+    public void setNightSetting(int nightSetting) {
+        this.nightSetting = nightSetting;
     }
 }

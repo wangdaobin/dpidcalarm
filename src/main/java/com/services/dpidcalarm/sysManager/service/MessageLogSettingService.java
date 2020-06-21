@@ -1,10 +1,14 @@
 package com.services.dpidcalarm.sysManager.service;
 
+import com.services.dpidcalarm.sysManager.bean.MessageSetting;
 import com.services.dpidcalarm.sysManager.bean.SendUsers;
+import com.services.dpidcalarm.sysManager.bean.UserBean;
 import com.services.dpidcalarm.sysManager.dao.MessageLogSettingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @Description TODO
@@ -25,4 +29,15 @@ public class MessageLogSettingService {
 
     }
 
+    public int saveMessageSetting(MessageSetting messageSetting){
+        return this.messageLogSettingMapper.saveMessageSetting(messageSetting);
+    }
+
+    public List<String> queryUsers(String indicatorType) {
+        return this.messageLogSettingMapper.queryUsers(indicatorType);
+    }
+
+    public MessageSetting queryMessageSetting(String indicatorType) {
+        return this.messageLogSettingMapper.queryMessageSetting(indicatorType);
+    }
 }

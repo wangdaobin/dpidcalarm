@@ -1,8 +1,12 @@
 package com.services.dpidcalarm.sysManager.dao;
 
+import com.services.dpidcalarm.sysManager.bean.MessageSetting;
 import com.services.dpidcalarm.sysManager.bean.SendUsers;
+import com.services.dpidcalarm.sysManager.bean.UserBean;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @Description TODO
@@ -13,7 +17,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MessageLogSettingMapper {
 
-    public int deleteOldSendUsers(String indicatorType);
+    int deleteOldSendUsers(String indicatorType);
 
-    public int insertSendUsers(SendUsers sendUsers);
+    int insertSendUsers(SendUsers sendUsers);
+
+    int saveMessageSetting(MessageSetting messageSetting);
+
+    List<String> queryUsers(String indicatorType);
+
+    MessageSetting queryMessageSetting(String indicatorType);
 }

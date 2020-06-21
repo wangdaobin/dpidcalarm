@@ -12,4 +12,42 @@
             (#{indicatorType},#{user.id})
         </foreach>
     </insert>
+
+    <insert id="saveMessageSetting" parameterType="com.services.dpidcalarm.sysManager.bean.MessageSetting">
+          insert into message_setting
+            ( indicator_type, gzOption, gzValue, send_type, send_start_time, send_end_time,message_interval,night_setting,night_start_time,night_end_time,night_send_interval)
+            values
+                (
+                #{indicatorType},
+                #{gzOption},
+                #{gzValue},
+                #{sendType},
+                #{sendStartTime},
+                #{sendEndTime},
+                #{messageInterval},
+                #{nightSetting},
+                #{nightStartTime},
+                #{nightEndTime},
+                #{nightSendInterval}
+                )
+            on duplicate key update
+            gzOption=values(gzOption),
+            gzValue=values(gzValue),
+            send_type =values(send_type),
+            send_start_time = values(send_start_time),
+            send_end_time = values(send_end_time),
+            message_interval = values(message_interval),
+            night_setting = values(night_setting),
+            night_start_time = values(night_start_time),
+            night_end_time = values(night_end_time),
+            night_send_interval = values(night_send_interval)
+    </insert>
+    
+    <select id="queryUsers" parameterType="String" resultType="String">
+        select user_id from indicator_message_user where indicator_type = #{indicatorType}
+    </select>
+    
+    <select id="queryMessageSetting" parameterType="String" resultType="com.services.dpidcalarm.sysManager.bean.MessageSetting">
+        select * from message_setting where indicator_type = #{indicatorType}
+    </select>
 </mapper>
